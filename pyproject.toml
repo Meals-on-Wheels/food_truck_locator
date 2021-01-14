@@ -1,0 +1,21 @@
+[tool.poetry]
+name = "final"
+version = "0.1.0"
+description = ""
+authors = ["seth mcfeeters <seth.mcfeeters@gmail.com>"]
+
+[tool.poetry.dependencies]
+python = "^3.8"
+Django = "^3.1.5"
+djangorestframework = "^3.12.2"
+psycopg2-binary = "^2.8.6"
+djangorestframework-simplejwt = "^4.6.0"
+django-environ = "^0.4.5"
+whitenoise = "^5.2.0"
+gunicorn = "^20.0.4"
+
+[tool.poetry.dev-dependencies]
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
