@@ -1,6 +1,8 @@
 from django.urls import path
-from . import views
+# Import all classes from the .views file
+from .views import test_map_view
+
 
 urlpatterns = [
-	path('', views.index, name='index'),
+    path('', test_map_view, name='test_map_view'),
 ]

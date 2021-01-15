@@ -5,8 +5,12 @@ from django.views import generic
 from .models import TruckInstance, Image, MenuItem
 
 # Create your views here.
-def index(request):
-    """View function for home page of site."""
-
-    # Render the HTML template index.html with the data in the context variable
-    return render(request, 'index.html')
+# request.query.lat ???
+def test_map_view(request):
+    info = {
+        'lat': 40.714224,
+        'lng': -73.961452
+    }
+    return render(
+        request, "map2.html", context = info
+    )

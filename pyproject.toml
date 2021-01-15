@@ -14,8 +14,11 @@ django-environ = "^0.4.5"
 whitenoise = "^5.2.0"
 gunicorn = "^20.0.4"
 Pillow = "^8.1.0"
+locationiq = "^0.0.2"
+geocoder = "^1.38.1"
 
 [tool.poetry.dev-dependencies]
+pylint = "^2.6.0"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
