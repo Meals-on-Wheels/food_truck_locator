@@ -9,5 +9,5 @@ def test_map_view(request):
         'lng': -73.961452
     }
     return render(
-        request, "map.html", context = info
+        request, "map2.html", context = info
     )
