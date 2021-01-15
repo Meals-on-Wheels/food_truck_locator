@@ -3,16 +3,23 @@ import geocoder
 import googlemaps
 from datetime import datetime
 
-# Most accurate locator (GOOGLE)
 lat_long_url = 'https://www.googleapis.com/geolocation/v1/geolocate?key=AIzaSyBJeC1z8iqvg7uRL4CZjdWeMaZe5o1vmDE'
 map_url = 'https://maps.googleapis.com/maps/api/staticmap?center=40.714728,-73.998672&zoom=12&size=400x400&maptype=hybrid&key=AIzaSyBJeC1z8iqvg7uRL4CZjdWeMaZe5o1vmDE'
-lat_long = requests.post(lat_long_url)
-map_img = requests.post(map_url)
-print(lat_long.text)
+
+# Most accurate locator (GOOGLE)
+def google_locate():
+    lat_long = requests.post(lat_long_url)
+    print(lat_long.text)
+    return lat_long
+
+
+
+
+
 
 # 2nd most accurate
 g = geocoder.ip('me')
-print(g.latlng)
+# print(g.latlng)
 
 
 # Google Maps 

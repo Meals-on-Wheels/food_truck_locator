@@ -6,11 +6,13 @@
         <script>
 let map;
 
+{% comment %} Initializes a map object  {% endcomment %}
 function initMap() {
   map = new google.maps.Map(document.getElementById("map"), {
     center: new google.maps.LatLng(-33.91722, 151.23064),
     zoom: 16,
   });
+  
   const iconBase =
     "https://developers.google.com/maps/documentation/javascript/examples/full/images/";
   const icons = {
