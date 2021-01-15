@@ -13,6 +13,7 @@ djangorestframework-simplejwt = "^4.6.0"
 django-environ = "^0.4.5"
 whitenoise = "^5.2.0"
 gunicorn = "^20.0.4"
+locationiq = "^0.0.2"
 
 [tool.poetry.dev-dependencies]
 pylint = "^2.6.0"
