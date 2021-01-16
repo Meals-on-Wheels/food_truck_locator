@@ -18,11 +18,11 @@ class SignUpForm(UserCreationForm):
     firstName = forms.CharField(max_length=40, required=True)
     lastName = forms.CharField(max_length=40, required=False)
     email = forms.EmailField(max_length=100)
-    phone = forms.IntegerField(max_length=15)
+    phone = forms.CharField(max_length=18)
 
     class Meta:
         model = User
-        fields = ('username,' 'firstName', 'lastName', 'email', 'phone', 'password1', 'password2')
+        fields = ('username', 'firstName', 'lastName', 'email', 'phone', 'password1', 'password2')
 
 def SignUp(request):
     if request.method == 'POST':
@@ -67,6 +67,8 @@ def activate_account_sent(request):
 
 def activate_account_invalid(request):
     return render(request, "activate_account_invalid.html")
+
+
 # request.query.lat ???
 def test_map_view(request):
     info = {
