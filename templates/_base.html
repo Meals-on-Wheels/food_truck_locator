@@ -5,11 +5,11 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="{% static 'base.css' %}">
-  <title>Welcome to my Blog</title>
+  <title>Food Truck App</title>
 </head>
 <body>
   <header>
-    <h1><a href="{% url 'blog_read_list' %}">Full Stack Blog</a></h1>
+    {% comment %} <h1><a href="{% url 'blog_read_list' %}">Full Stack Blog</a></h1> {% endcomment %}
   </header>
   {% block content %}
   <p>Looks like somebody forgot to define this block in a child template</p>
