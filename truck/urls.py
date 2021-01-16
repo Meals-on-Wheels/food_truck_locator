@@ -1,4 +1,6 @@
+from django.conf.urls import url
 from django.urls import path
+
 # Import all classes from the .views file
 from .views import test_map_view
 
