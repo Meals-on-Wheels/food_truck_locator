@@ -1,12 +1,11 @@
+from django.conf.urls import url
 from django.urls import path
-# Import all classes from the .views file
-from .views import blogListView, blogDetailView, blogCreateView, blogUpdateView, blogDeleteView
-
+from . import views
 
 urlpatterns = [
-    path('', blogListView.as_view(), name='blog_read_list'),
-    path('new/', blogCreateView.as_view(), name="blog_create"),
-    path('<int:pk>/', blogDetailView.as_view(), name='blog_read_detail'),
-    path('<int:pk>/edit', blogUpdateView.as_view(), name='blog_update'),
-    path('<int:pk>/delete', blogDeleteView.as_view(), name='blog_delete'),
+    path('signup/', views.SignUp, name='signup'),
+    path('activate_account_sent/', views.activate_account_sent, name='activate_account_sent'),
+    path('activate_account_invalid/', views.activate_account_invalid, name='activate_account_invalid'),
+    url(r'^activate/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,20})/$',
+        views.activate, name='activate'),
 ]
