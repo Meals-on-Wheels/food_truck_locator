@@ -1,8 +1,9 @@
 from django.shortcuts import render, redirect
+from .models import TruckInstance, Image, MenuItem
 from django.http import HttpResponse
-from django.views import View
+from django.views import View, generic
 from django import forms
-from django.contrib.auth import login
+from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from django.contrib.sites.shortcuts import get_current_site
@@ -67,7 +68,6 @@ def activate_account_sent(request):
 
 def activate_account_invalid(request):
     return render(request, "activate_account_invalid.html")
-
 
 # request.query.lat ???
 def test_map_view(request):
