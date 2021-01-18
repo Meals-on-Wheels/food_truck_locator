@@ -12,7 +12,7 @@ from django.utils.encoding import force_bytes, force_text
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from . import tokens
 from django.conf import settings
-from django.core.mail import send_mail
+from django.core.mail import send_mail, EmailMessage
 from django.core.exceptions import ObjectDoesNotExist
 
 class SignUpForm(UserCreationForm):
@@ -37,13 +37,14 @@ def SignUp(request):
             message = render_to_string('activate_account_email.html', {
                 'user': user,
                 'domain': currentSite.domain,
-                'uid': urlsafe_base64_decode(force_bytes(user.pk)).decode(),
+                'uid': force_text(urlsafe_base64_encode(force_bytes(user.pk))),#.decode(),
                 'token': tokens.activate_account_token.make_token(user),
             })
-            configureEmail = settings.DEFAULT_FROM_EMAIL
-            send_mail(subject, message, configureEmail, [user.email])
 
-            return HttpResponse('Please confirm your email address to complete your sign up!')
+            cleaned_email = form.cleaned_data.get('email')
+            email = EmailMessage(subject, message, to=[cleaned_email])
+            email.send()
+            return redirect('activate_account_sent')
     else:
         form = SignUpForm()
     return render(request, 'signup.html', {'form': form})
@@ -52,16 +53,17 @@ def activate(request, uidb64, token):
     try:
         uid = force_text(urlsafe_base64_decode(uidb64))
         user = User.objects.get(pk=uid)
-    except(TypeError, ValueError, OverflowError, User.ObjectDoesNotExist): # User.ObjectDoesNotExist?
+    except(TypeError, ValueError, OverflowError, User.DoesNotExist): # User.ObjectDoesNotExist?
         user = None
 
     if user is not None and tokens.activate_account_token.check_token(user, token):
         user.is_active = True
         user.save()
         login(request, user)
-        return redirect('Homepage')
+        #return redirect('home')
+        return HttpResponse('Thank you for your confirmation')
     else:
-        return render(request, "activate_account_invalid.html")
+        return render(request, "Link is invalid")
 
 def activate_account_sent(request):
     return render(request, "activate_account_sent.html")

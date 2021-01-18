@@ -51,14 +51,14 @@ INSTALLED_APPS = [
 
 ]
 
+EMAIL_USE_TLS = True
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_HOST_USER = 'foodtruckerfinder12@gmail.com'
 EMAIL_HOST_PASSWORD = 'foragetrucks'
 EMAIL_PORT = 587
-EMAIL_USE_TLS = True
 #EMAIL_USE_SSL = False
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-DEFAULT_FROM_EMAIL = 'foodtruckfinder1234@gmail.com'
+#DEFAULT_FROM_EMAIL = 'foodtruckfinder12@gmail.com'
 
 
 
