@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.forms import AuthenticationForm
 from django.views import generic
-from .models import TruckInstance, Image, MenuItem
+from .models import TruckInstance, ImageLink, MenuItem
 
 # Create your views here.
 # request.query.lat ???

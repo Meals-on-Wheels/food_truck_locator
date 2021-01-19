@@ -3,9 +3,9 @@ from django.urls import reverse
 from django.contrib.auth.models import User
 
 # Create your models here.
-class Image(models.Model):
+class ImageLink(models.Model):
     title = models.CharField(max_length=75, help_text='What is the pictures name.')
-    image = models.ImageField(upload_to='static/images')
+    link = models.URLField(max_length=250, help_text='Enter the target URL.')
 
     def __str__(self):
         return f'{self.title}'
@@ -25,7 +25,7 @@ class TruckInstance(models.Model):
     menu = models.ManyToManyField(MenuItem)
     location = models.CharField(max_length=75, help_text='Enter the current location.')
     contact = models.CharField(max_length=18, help_text='Enter a working number for the truck.', blank=True)
-    album = models.ManyToManyField(Image)
+    album = models.ManyToManyField(ImageLink)
 
     class Meta:
         ordering = ['name', 'owner', 'location']
