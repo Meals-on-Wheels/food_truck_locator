@@ -7,10 +7,11 @@ from . import views
 
 urlpatterns = [
     path('', views.home_view, name='home'),
+    path('map/', views.test_map_view, name='test map')
     path('about/', views.about_view, name='about'),
     path('login/', views.login_view, name='login'),
     path('signup/', views.SignUp, name='signup'),
-    path('signed-in/', views.signIn, name="sign in")
+    path('signed-in/', views.signIn, name="sign in"),
     path('activate_account_sent/', views.activate_account_sent, name='activate_account_sent'),
     path('activate_account_invalid/', views.activate_account_invalid, name='activate_account_invalid'),
     path('activate/<slug:uidb64>/<slug:token>/', views.activate, name='activate'),
