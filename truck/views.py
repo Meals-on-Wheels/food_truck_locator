@@ -57,7 +57,7 @@ def signIn(request):
             return redirect('index')
     else:
         form = AuthenticationForm()
-    return render(request, 'signup.html', {'form': form})
+    return render(request, 'login.html', {'form': form})
     
 
 
