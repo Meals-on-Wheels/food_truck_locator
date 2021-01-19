@@ -5,9 +5,13 @@
 body {
     color:aliceblue;
     text-shadow: 1px 3px rgba(0, 0, 0, .5);
-    font-family: "H"
+    font-family: "Helvetica Neue", Arial, Helvetica, sans-serif;
+    font-size: 15px;
+    box-sizing: border-box;
+    display: block;
 }
+
 html, body {
     height: 100%;
-    background-color: rgb(98, 105, 111);
+    background-color: rgb(86, 91, 96);
 }
