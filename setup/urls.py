@@ -19,5 +19,5 @@ from django.urls import path, include
 # from truck import views
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/v1/truck', include('truck.urls')),
+    path('', include('truck.urls')),
 ]
