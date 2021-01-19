@@ -49,6 +49,19 @@ def SignUp(request):
         form = SignUpForm()
     return render(request, 'signup.html', {'form': form})
 
+def signIn(request):
+    if request.method == 'POST':
+        form = AuthenticationForm(request, data=request.POST)
+        if form.is_valid():
+            login(request, form.get_user())
+            return redirect('index')
+    else:
+        form = AuthenticationForm()
+    return render(request, 'signup.html', {'form': form})
+    
+
+
+
 def activate(request, uidb64, token):
     try:
         uid = force_text(urlsafe_base64_decode(uidb64))
@@ -61,7 +74,7 @@ def activate(request, uidb64, token):
         user.save()
         login(request, user)
         #return redirect('home')
-        return HttpResponse('Thank you for your confirmation')
+        return('index')
     else:
         return render(request, "Link is invalid")
 
@@ -81,3 +94,34 @@ def test_map_view(request):
         request, "map2.html", context = info
     )
 
+def home_view(request, *args, **kwargs):
+    return render(request, "index.html", {})
+
+def login_view(request, *args, **kwargs):
+    return render(request, "login.html", {})
+
+def signup_view(request, *args, **kwargs):
+    return render(request, "signup.html", {})
+
+# home view for after logging in?
+def truck_list_view(request, *args, **kwargs):
+    return render(request, "truck-list-view.html", {})
+    # should have view of the map inside
+
+def truck_single_view(request, *args, **kwargs):
+    return render(request, "truck-single-view.html", {})
+
+def menu_page_view(request, *args, **kwargs):
+    return render(request, "menu-page.html", {})
+
+def order_detail_view(request, *args, **kwargs):
+    return render(request, "order-detail.html", {})
+
+def checkout_view(request, *args, **kwargs):
+    return render(request, "checkout.html", {})
+
+def about_view(request, *args, **kwargs):
+    return render(request, "about.html", {})
+
+def _redirect(request, *args, **kwargs):
+    return redirect(request, 'index.html', {})
