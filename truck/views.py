@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from .models import TruckInstance, Image, MenuItem
+from .models import TruckInstance, ImageLink, MenuItem
 from django.http import HttpResponse
 from django.views import View, generic
 from django import forms
