@@ -20,7 +20,7 @@ class MenuItem(models.Model):
 
 class TruckInstance(models.Model):
 
-    owner = models.OneToOneField(User, on_delete=models.SET_NULL, null=True)
+    owner = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
     name = models.CharField(max_length=75, help_text='Enter the store name.')
     menu = models.ManyToManyField(MenuItem)
     location = models.CharField(max_length=75, help_text='Enter the current location.')
@@ -32,3 +32,16 @@ class TruckInstance(models.Model):
 
     def __str__(self):
         return f'{self.name}'
+
+class OrderInstance(models.Model):
+
+    truck = models.ForeignKey(TruckInstance, on_delete=models.SET_NULL, null=True)
+    inventory = models.ManyToManyField(MenuItem)
+
+    def __str__(self):
+        return f'{truck.name}'
+
+    def display_inventory(self):
+        return ', '.join([item.item for item in inventory])
+
+    display_inventory.short_description = 'items'
