@@ -36,7 +36,9 @@ display: inline;
         <div>
             <ul class="navBarList">
                 {% if user.is_authenticated %} 
-                    <li><a href="{% url 'login' %}">Log In</a></li>
+                    <li><a>{{user.username}}</a>|<a>Log Out</a></li>
+                {% else %}
+                    <li><a href="{% url 'login' %}">Log In</a>|<a href="{% url 'signup' %}">Sign Up</a></li>
                 {% endif %}
                 <li><a href="{% url 'home' %}">Home</a></li>
                 <li><a href="{% url 'about' %}">About Us</a></li>
