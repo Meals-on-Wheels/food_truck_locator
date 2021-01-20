@@ -1,10 +1,50 @@
 {% extends 'base.html' %}
 
 {% block content %}
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/carousel.css' %}">
+<h1>{{truck.name}}</h1>
+<h3>{{truck.locations}}</h3>
+{% if truck.contact %}
+	<p>{{truck.contact}}</p>
+{% endif %}
+<div class='slideshow-container'>
+{% for image in truck.album %}
+        <div class="mySlides fade">
+            <img src="{{image.link}}" alt="UML diagram">
+        </div>
+{% endfor %}
+	<a class="prev" onclick="plusSlides(-1)">&#10094;</a>
+    <a class="next" onclick="plusSlides(1)">&#10095;</a>
+</div>
+<form action='menu' method='post'>
+	<input type='hidden' value='{{truck.pk}}'>
+	<input type="submit" value="View Menu">
+</form>
+<script>
+    // https://www.w3schools.com/howto/howto_js_slideshow.asp
+    var slideIndex = 1;
+    showSlides(slideIndex);
 
-<h3>Selected food truck page comming soon</h3>
-<ul>
-    <li>Menu items coming soon<li>
-<ul>
+    // Next/previous controls
+    function plusSlides(n) {
+    showSlides(slideIndex += n);
+    }
 
+    // Thumbnail image controls
+    function currentSlide(n) {
+        showSlides(slideIndex = n);
+    }
+
+    function showSlides(n) {
+        var i;
+        var slides = document.getElementsByClassName("mySlides");
+        if (n > slides.length) {slideIndex = 1}
+        if (n < 1) {slideIndex = slides.length}
+        for (i = 0; i < slides.length; i++) {
+            slides[i].style.display = "none";
+        }
+        slides[slideIndex-1].style.display = "block";
+    }
+</script>
 {% endblock content %}

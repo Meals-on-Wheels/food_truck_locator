@@ -14,6 +14,7 @@ from . import tokens
 from django.conf import settings
 from django.core.mail import send_mail, EmailMessage
 from django.core.exceptions import ObjectDoesNotExist
+from .forms import TruckDetailForm
 
 class SignUpForm(UserCreationForm):
     firstName = forms.CharField(max_length=40, required=True)
@@ -104,31 +105,13 @@ def signup_view(request, *args, **kwargs):
     return render(request, "signup.html", {})
 
 # home view for after logging in?
-def truck_list_view(request, *args, **kwargs):
-	if request.owned:
-		context = {'trucks': TruckInstance.objects.all().filter(owner=request.user)}
-	else:
-		context = {'trucks': TruckInstance.objects.all()}
-    return render(request, "truck-list-view.html", context)
-    # should have view of the map inside
 
-def truck_single_view(request, *args, **kwargs):
-    return render(request, "truck-single-view.html", {})
 
-def menu_page_view(request, *args, **kwargs):
-	truck = TruckInstance.get(id=request.truck)
-	context={'orders': truck.list_menu(),}
-    return render(request, "menu-page.html", context)
 
 # def order_detail_view(request, *args, **kwargs):
-#     truck = TruckInstance.get(id=request.truck)
-# 	context={'orders': truck.list_menu(),}
-#     return render(request, "order-detail.html", context)
-
-def checkout_view(request, *args, **kwargs):
-    truck = TruckInstance.get(id=request.truck)
-	context={'orders': OrderInstance.orders(truck.name).list_inventory(),}
-    return render(request, "checkout.html", context)
+    # truck = TruckInstance.get(id=request.truck)
+    # context={'orders': truck.list_menu(),}
+    # return render(request, "order-detail.html", context)
 
 def about_view(request, *args, **kwargs):
     return render(request, "about.html", {})
@@ -136,7 +119,43 @@ def about_view(request, *args, **kwargs):
 def _redirect(request, *args, **kwargs):
     return redirect(request, 'index.html', {})
 
+#### Completed order for passing information
+def truck_list_view(request, *args, **kwargs):
+    #when we link to this we need a propery to say if its from the owner like below
+    # if request.owned:
+    #     context = {'trucks': TruckInstance.objects.all().filter(owner=request.user)}
+    # else:
+    if request.method == 'POST':
+        form = TruckDetailForm()
+        request.session['truck'] = form.cleaned_data['truck']
+        redirect('truck single view')
+    context = {'trucks': TruckInstance.objects.all()}
+    return render(request, "truck-list-view.html", context)
+    # should have view of the map inside
+
+def truck_single_view(request, *args, **kwargs):
+    truck = request.session['truck']
+    context={'truck': truck,}
+    return render(request, "truck-single-view.html", context)
+
+## Need to think of a way to grab all the food quantities selected and create the orderinstance
+def menu_page_view(request, *args, **kwargs):
+    if 'inventory' in request.session:
+        OrderInstance.objects.create(poster=request.user.username, truck=request.session['truck'], inventory=request.session['inventory'])
+        return redirect('checkout')
+    truck = request.session['truck']
+    context={'truck': truck}
+    return render(request, "menu-page.html", context)
+
+def checkout_view(request, *args, **kwargs):
+    truck = request.session['truck']
+    poster = User.get(username=request.user.username)
+    context={'orders': OrderInstance.objects().get(truck=truck, poster=poster).list_inventory(),}
+    return render(request, "checkout.html", context)
+
 def all_orders_view(request, *args, **kwargs):
-	truck = TruckInstance.get(id=request.truck)
-	context={'orders': OrderInstance.orders(truck.name),}
+    if 'poster' in request.session:
+        OrderInstance.objects().get(poster=request.session['poster'], truck=request.session['truck']).delete()
+    truck = TruckInstance.objects().get(id=request.session['truck'])
+    context={'orders': OrderInstance.objects().filter(truck=truck),}
     return render(request, "all-orders.html", context)

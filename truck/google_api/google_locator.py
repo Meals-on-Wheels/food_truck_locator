@@ -22,14 +22,14 @@ def google_locate():
 
 
 def test_location(request):
-"""
-Post users address to this rout
-address gets converted to lat long
-retrieve location of trucks from databases
-****template stuff from here*****
-pinning trucks on to map
-users lat lon
-"""
+    """
+    Post users address to this rout
+    address gets converted to lat long
+    retrieve location of trucks from databases
+    ****template stuff from here*****
+    pinning trucks on to map
+    users lat lon
+    """
 
     lat_long_url = (f'https://www.googleapis.com/geolocation/v1/geolocate?key={GOOGLE_MAPS_API_KEY}')
     map_url = 'https://maps.googleapis.com/maps/api/staticmap?center=40.714728,-73.998672&zoom=12&size=400x400&maptype=hybrid&key=AIzaSyBJeC1z8iqvg7uRL4CZjdWeMaZe5o1vmDE'

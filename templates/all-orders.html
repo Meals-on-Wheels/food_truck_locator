@@ -11,6 +11,11 @@
 		<li>{{item}}</li>
 	{% endfor %}
 	</ul></li>
+	<form method='post'>
+		<input type="hidden" name="poster" value='{{order.poster}}'>
+		<input type="hidden" name="truck" value='{{order.truck}}'>
+		<input type="submit" value='Remove'>
+	</form>
 {% endfor %}
 </ol>
 {% endblock content %}
