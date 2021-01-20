@@ -36,21 +36,11 @@ class TruckInstance(models.Model):
     def list_menu(self):
         return [f'{item.item}: {item.cost}' for item in self.menu.all()]
 
-class SpecificOrderManager(models.manager):
-
-    def __init__(self, query):
-        self.query = query
-        super().__init__()
-
-    def get_queryset(self):
-        return super().get_queryset().filter(truck=query)
-
 class OrderInstance(models.Model):
 
+    poster = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
     truck = models.ForeignKey(TruckInstance, on_delete=models.SET_NULL, null=True)
     inventory = models.ManyToManyField(MenuItem)
-    objects = models.Manager()
-    orders = SpecificOrderManager()
 
     def __str__(self):
         return f'{truck.name}'
