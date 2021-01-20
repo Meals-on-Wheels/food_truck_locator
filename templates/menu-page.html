@@ -1,9 +1,10 @@
-{% include 'base.html' %}
+{% extends 'base.html' %}
 
 {% block content %}
 
+<h1>{{truck.name}}</h1>
 <ul>
-{% for item in truck.menu %}
+{% for item in truck.menu.objects.all %}
     <li>{{item.item}}: {{item.cost}}</li>
     {% if request.user.is_authenticated %}
     <input type='number' min='0' name='{{item.item}}'>
@@ -13,8 +14,8 @@
 {% if request.user.is_authenticated %}
     <form method='post'>
     	{% csrf_token %}
-    	<input type="hidden" name="inventory" value='{{truck.menu}}'>
-    	<input type="hidden" name="truck" value='{{truck}}'>
+    	<input type="hidden" name="inventory" value='2'>
+    	<input type="hidden" name="truck" value='{{truck.pk}}'>
     	<input type='submit' value='Checkout'>
     </form>
 {% endif %}

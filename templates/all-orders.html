@@ -12,7 +12,8 @@
 	{% endfor %}
 	</ul></li>
 	<form method='post'>
-		<input type="hidden" name="poster" value='{{order.poster}}'>
+		{% csrf_token %}
+		<input type="hidden" name="poster" value='{{order.poster.username}}'>
 		<input type="hidden" name="truck" value='{{order.truck}}'>
 		<input type="submit" value='Remove'>
 	</form>

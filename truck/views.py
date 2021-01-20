@@ -1,6 +1,6 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, reverse
 from .models import TruckInstance, ImageLink, MenuItem, OrderInstance
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpRequest
 from django.views import View, generic
 from django import forms
 from django.contrib.auth import login, authenticate, logout
@@ -9,12 +9,13 @@ from django.contrib.auth.models import User
 from django.contrib.sites.shortcuts import get_current_site
 from django.template.loader import render_to_string
 from django.utils.encoding import force_bytes, force_text
-from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode, urlencode
 from . import tokens
 from django.conf import settings
 from django.core.mail import send_mail, EmailMessage
 from django.core.exceptions import ObjectDoesNotExist
 from .forms import TruckDetailForm
+import json
 
 class SignUpForm(UserCreationForm):
     firstName = forms.CharField(max_length=40, required=True)
@@ -126,37 +127,40 @@ def truck_list_view(request, *args, **kwargs):
     # if request.owned:
     #     context = {'trucks': TruckInstance.objects.all().filter(owner=request.user)}
     # else:
-    if request.method == 'POST':
-        form = TruckDetailForm()
-        request.session['truck'] = form.cleaned_data['truck']
-        redirect('truck single view')
     context = {'trucks': TruckInstance.objects.all()}
     return render(request, "truck-list-view.html", context)
     # should have view of the map inside
 
 def truck_single_view(request, *args, **kwargs):
-    truck = request.session['truck']
+    # truck = TruckInstance.objects.get(id=request.POST['truck'])
+    truck = TruckInstance.objects.get(pk=request.POST['truck'])
     context={'truck': truck,}
     return render(request, "truck-single-view.html", context)
 
 ## Need to think of a way to grab all the food quantities selected and create the orderinstance
 def menu_page_view(request, *args, **kwargs):
-    if 'inventory' in request.session:
-        OrderInstance.objects.create(poster=request.user.username, truck=request.session['truck'], inventory=request.session['inventory'])
-        return redirect('checkout')
-    truck = request.session['truck']
+    if 'inventory' in request.POST:
+        new_order = OrderInstance.objects.create(poster=request.user, truck=TruckInstance.objects.get(pk=request.POST['truck']))
+        inventory = request.POST['inventory']
+        for item in inventory.split(', '):
+            new_order.inventory.add(MenuItem.objects.get(pk=int(item)))
+        new_order.save()
+        base_url = reverse('checkout')
+        query = urlencode({'order': new_order.pk})
+        url = '{}?{}'.format(base_url, query)
+        return redirect(url)
+    truck = TruckInstance.objects.get(pk=request.POST['truck'])
     context={'truck': truck}
     return render(request, "menu-page.html", context)
 
 def checkout_view(request, *args, **kwargs):
-    truck = request.session['truck']
-    poster = User.get(username=request.user.username)
-    context={'orders': OrderInstance.objects().get(truck=truck, poster=poster).list_inventory(),}
+    order_number = request.GET.get('order')
+    context={'orders': OrderInstance.objects.get(pk=order_number).list_inventory(),}
     return render(request, "checkout.html", context)
 
 def all_orders_view(request, *args, **kwargs):
-    if 'poster' in request.session:
-        OrderInstance.objects().get(poster=request.session['poster'], truck=request.session['truck']).delete()
-    truck = TruckInstance.objects().get(id=request.session['truck'])
-    context={'orders': OrderInstance.objects().filter(truck=truck),}
+    if 'poster' in request.POST:
+        OrderInstance.objects.get(poster=User.objects.get(username=request.POST['poster']), truck=TruckInstance.objects.get(pk=request.POST['truck'])).delete()
+    truck = TruckInstance.objects.get(pk=request.POST['truck'])
+    context={'orders': OrderInstance.objects.filter(truck=truck),}
     return render(request, "all-orders.html", context)

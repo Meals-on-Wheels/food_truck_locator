@@ -1,13 +1,13 @@
-{% include 'base.html' %}
+{% extends 'base.html' %}
 
 {% block content %}
 
 <h3>View of all nearby food trucks coming soon</h3>
 <ol>
 {% for truck in trucks %}
-	<form method="post">
+	<form action="{% url 'truck single view' %}" method="post">
 		{% csrf_token %}
-		<input type='hidden' name='truck' value='{{truck}}'>
+		<input type='hidden' name='truck' value='{{truck.pk}}'>
 		<ul>
 			<li>{{truck.name}}</li>
 			<li>{{truck.location}}</li>
