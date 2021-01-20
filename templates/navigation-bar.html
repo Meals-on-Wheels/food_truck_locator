@@ -1,0 +1,47 @@
+<style type="text/css">
+.navBar {
+background-color:peachpuff
+}
+.navContainer {
+    color: black;
+}
+#navButton {
+    height: 30px;
+    width: 30px;
+    background: url("icon.png")
+    
+}
+.navBarTitle {
+text-align: center;
+}
+
+.navBarList {
+display: inline;
+}
+
+
+</style>
+
+<nav class="navBar">
+    <div class= "navContainer">
+        <div>
+            <!-- <button type=button id = navButton>
+                <span class="iconStuff">1</span>
+                <span class="iconStuff">2</span>
+                <span class="iconStuff">3</span>
+                <span class="iconStuff">4</span>
+            </button> -->
+        </div>
+            <div class="navBarTitle"><strong> Meals On Wheels </strong></div>
+        <div>
+            <ul class="navBarList">
+                {% if user.is_authenticated %} 
+                    <li><a href="{% url 'login' %}">Log In</a></li>
+                {% endif %}
+                <li><a href="{% url 'home' %}">Home</a></li>
+                <li><a href="{% url 'about' %}">About Us</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
