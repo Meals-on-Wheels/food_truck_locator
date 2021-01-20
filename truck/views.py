@@ -104,6 +104,7 @@ def login_view(request, *args, **kwargs):
 def signup_view(request, *args, **kwargs):
     return render(request, "signup.html", {})
 
+
 # home view for after logging in?
 
 
