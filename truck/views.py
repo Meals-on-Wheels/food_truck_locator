@@ -103,7 +103,6 @@ def login_view(request, *args, **kwargs):
 def signup_view(request, *args, **kwargs):
     return render(request, "signup.html", {})
 
-# home view for after logging in?
 def truck_list_view(request, *args, **kwargs):
 	if request.owned:
 		context = {'trucks': TruckInstance.objects.all().filter(owner=request.user)}
