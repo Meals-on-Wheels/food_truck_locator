@@ -4,9 +4,11 @@ from django.urls import path, re_path
 # Import all classes from the .views file
 # from .views import test_map_view
 from . import views
+from truck.google_api.google_locator import test_location
 
 urlpatterns = [
     path('', views.home_view, name='home'),
+    path('test', test_location),
     path('about/', views.about_view, name='about'),
     path('login/', views.login_view, name='login'),
     path('signup/', views.SignUp, name='signup'),
