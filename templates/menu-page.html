@@ -3,5 +3,9 @@
 {% block content %}
 
 <h3>menu-page coming soon</h3>
-
+<ul>
+{% for item in menu %}
+    <li>{{item}}</li>
+{% endfor %}
+</ul>
 {% endblock content %}

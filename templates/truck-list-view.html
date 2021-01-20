@@ -3,5 +3,13 @@
 {% block content %}
 
 <h3>View of all nearby food trucks coming soon</h3>
-
+<ul>
+{% for truck in trucks %}
+	<li>{{truck.name}}</li>
+	<li>{{truck.location}}</li>
+	{% if truck.contact %}
+		<li>{{truck.contact}}</li>
+	{% endif %}
+{% endfor %}
+</ul>
 {% endblock content %}

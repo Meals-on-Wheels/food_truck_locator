@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from .models import TruckInstance, ImageLink, MenuItem
+from .models import TruckInstance, ImageLink, MenuItem, OrderInstance
 from django.http import HttpResponse
 from django.views import View, generic
 from django import forms
@@ -104,23 +104,38 @@ def signup_view(request, *args, **kwargs):
     return render(request, "signup.html", {})
 
 def truck_list_view(request, *args, **kwargs):
-    return render(request, "truck-list-view.html", {})
+	if request.owned:
+		context = {'trucks': TruckInstance.objects.all().filter(owner=request.user)}
+	else:
+		context = {'trucks': TruckInstance.objects.all()}
+    return render(request, "truck-list-view.html", context)
     # should have view of the map inside
 
 def truck_single_view(request, *args, **kwargs):
     return render(request, "truck-single-view.html", {})
 
 def menu_page_view(request, *args, **kwargs):
-    return render(request, "menu-page.html", {})
+	truck = TruckInstance.get(id=request.truck)
+	context={'orders': truck.list_menu(),}
+    return render(request, "menu-page.html", context)
 
-def order_detail_view(request, *args, **kwargs):
-    return render(request, "order-detail.html", {})
+# def order_detail_view(request, *args, **kwargs):
+#     truck = TruckInstance.get(id=request.truck)
+# 	context={'orders': truck.list_menu(),}
+#     return render(request, "order-detail.html", context)
 
 def checkout_view(request, *args, **kwargs):
-    return render(request, "checkout.html", {})
+    truck = TruckInstance.get(id=request.truck)
+	context={'orders': OrderInstance.orders(truck.name).list_inventory(),}
+    return render(request, "checkout.html", context)
 
 def about_view(request, *args, **kwargs):
     return render(request, "about.html", {})
 
 def _redirect(request, *args, **kwargs):
     return redirect(request, 'index.html', {})
+
+def all_orders_view(request, *args, **kwargs):
+	truck = TruckInstance.get(id=request.truck)
+	context={'orders': OrderInstance.orders(truck.name),}
+    return render(request, "all-orders.html", context)
