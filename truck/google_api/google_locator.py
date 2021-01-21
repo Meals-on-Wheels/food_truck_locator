@@ -44,8 +44,6 @@ def test_location(request):
     for result in geocode_result:
         coordinates.append(result[0]['geometry']['location'])
     locs = [[coordinate['lat'], coordinate['lng']] for coordinate in coordinates]
-    print("********************************",locs)
-
     return render(request, 'map2.html', context={'locs':locs})
 
 
