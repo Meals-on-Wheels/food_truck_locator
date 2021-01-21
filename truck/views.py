@@ -1,13 +1,14 @@
 from django.shortcuts import render, redirect, reverse
 from .models import TruckInstance, ImageLink, MenuItem, OrderInstance, UserLocation
 from .tokens import activate_account_token
-from .google_api.google_gps import google_locate
+from .google_api.google_gps import google_locate, test_location, GOOGLE_MAPS_API_KEY
 from django.http import HttpResponse, HttpRequest
 from django.utils.http import urlencode
 from django.views import View, generic
 from django.contrib.auth import login, authenticate, logout, tokens
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm, forms
 from django.contrib.auth.models import User
+from django.db.models import Q
 from django.contrib.sites.shortcuts import get_current_site
 from django.template.loader import render_to_string
 from django.utils.encoding import force_bytes, force_text
@@ -16,6 +17,8 @@ from django.conf import settings
 from django.core.mail import send_mail, EmailMessage
 from django.core.exceptions import ObjectDoesNotExist
 import json
+import geocoder
+import googlemaps
 
 class SignUpForm(UserCreationForm):
     firstName = forms.CharField(max_length=40, required=True)
@@ -62,13 +65,17 @@ def login_view(request):
     return render(request, 'login.html', {'form': form})
 
 def profile_view(request, user):
+    account = User.objects.get(username=user)
+    context = {'trucks': TruckInstance.objects.filter(owner=account), 'profile': True}
+    gmaps = googlemaps.Client(key=GOOGLE_MAPS_API_KEY)
+    coordinates = [gmaps.geocode(truck.location)[0]['geometry']['location'] for truck in TruckInstance.objects.filter(~Q(location='Closed'), owner=request.user)]
+    context['locs'] = [[coordinate['lat'], coordinate['lng']] for coordinate in coordinates]
     if 'remove' in request.POST:
         TruckInstance.objects.get(pk=request.POST['truck']).delete()
     if 'name' in request.POST:
         contact = '' if not 'contact' in request.POST else request.POST['contact']
         TruckInstance.objects.create(owner=request.user, name=request.POST['name'], contact=contact)
-    account = User.objects.get(username=user)
-    return render(request, 'truck-list-view.html', {'trucks': TruckInstance.objects.filter(owner=account), 'profile': True})
+    return render(request, 'truck-list-view.html', context)
     
 def logout_view(request):
     logout(request)
@@ -133,11 +140,10 @@ def _redirect(request, *args, **kwargs):
 
 #### Completed order for passing information
 def truck_list_view(request, *args, **kwargs):
-    
+    context = {'trucks': TruckInstance.objects.all()}
     if 'locator' in request.POST:
         latlng = google_locate()
         jsonResponse = json.loads(latlng.content)
-        print(jsonResponse)
         lat = jsonResponse['location']['lat']
         lng = jsonResponse['location']['lng']
         try:
@@ -146,8 +152,17 @@ def truck_list_view(request, *args, **kwargs):
             userLocation.save()
         except:
             userLocation = UserLocation.objects.create(user=request.user, lat = lat, lng = lng)
-
-    context = {'trucks': TruckInstance.objects.all()}
+        context['lat'] = userLocation.lat
+        context['lng'] = userLocation.lng
+        lat_long_url = (f'https://www.googleapis.com/geolocation/v1/geolocate?key={GOOGLE_MAPS_API_KEY}')
+        map_url = f'https://maps.googleapis.com/maps/api/staticmap?center={userLocation.lat},{userLocation.lng}&zoom=12&size=400x400&maptype=hybrid&key={GOOGLE_MAPS_API_KEY}'
+        gmaps = googlemaps.Client(key=GOOGLE_MAPS_API_KEY)
+        # Geocoding an address
+        # locations = [truck.location for truck in TruckInstance.objects.all()]
+        # geocode_result = [gmaps.geocode(location) for location in locations]
+        # coordinates = [result[0]['geometry']['location'] for result in geocode_result]
+        coordinates = [gmaps.geocode(truck.location)[0]['geometry']['location'] for truck in TruckInstance.objects.filter(~Q(location='Closed'))]
+        context['locs'] = [[coordinate['lat'], coordinate['lng']] for coordinate in coordinates]
     return render(request, "truck-list-view.html", context)
     # should have view of the map inside
 
@@ -199,15 +214,22 @@ def checkout_view(request, *args, **kwargs):
     for item in inventory.split(', '):
         grub = MenuItem.objects.get(id=int(item))
         if grub.item in request.POST:
-            new_order.inventory.add(grub)
+            try:
+                if int(request.POST[grub.item]) > 0:
+                    new_order.inventory.add(grub)
+            except:
+                pass
     new_order.save()
-    print('***********\n***********\n***********\n', new_order.inventory.all(), '***********\n***********\n***********\n')
     context={'order': new_order.inventory.all(),}
     return render(request, "checkout.html", context)
 
 def all_orders_view(request, *args, **kwargs):
-    if 'poster' in request.POST:
-        OrderInstance.objects.get(poster=User.objects.get(username=request.POST['poster']), truck=TruckInstance.objects.get(pk=request.POST['truck'])).delete()
+    if 'remove' in request.POST:
+        OrderInstance.objects.get(pk=request.POST['orderno']).delete()
+    elif 'prepared' in request.POST:
+        editing = OrderInstance.objects.get(pk=request.POST['orderno'])
+        editing.prepared = True
+        editing.save()
     truck = TruckInstance.objects.get(pk=request.POST['truck'])
     context={'orders': OrderInstance.objects.filter(truck=truck),}
     return render(request, "all-orders.html", context)
