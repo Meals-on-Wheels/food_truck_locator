@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect, reverse
-from .models import TruckInstance, ImageLink, MenuItem, OrderInstance
+from .models import TruckInstance, ImageLink, MenuItem, OrderInstance, UserLocation
 from .tokens import activate_account_token
+from .google_api.google_gps import google_locate
 from django.http import HttpResponse, HttpRequest
 from django.utils.http import urlencode
 from django.views import View, generic
@@ -97,12 +98,15 @@ def activate_account_invalid(request):
 
 # request.query.lat ???
 def test_map_view(request):
-    info = {
-        'lat': 40.714224,
-        'lng': -73.961452
+    userLocation = UserLocation.objects.get(user = request.user)
+    context = {
+        'lat': userLocation.lat,
+        'lng': userLocation.lng
     }
+    print('*$$$$$$$$$$$$*****************************', context)
+
     return render(
-        request, "map2.html", context = info
+        request, "map2.html", context
     )
 
 def home_view(request, *args, **kwargs):
@@ -129,10 +133,20 @@ def _redirect(request, *args, **kwargs):
 
 #### Completed order for passing information
 def truck_list_view(request, *args, **kwargs):
-    #when we link to this we need a propery to say if its from the owner like below
-    # if request.owned:
-    #     context = {'trucks': TruckInstance.objects.all().filter(owner=request.user)}
-    # else:
+    
+    if 'locator' in request.POST:
+        latlng = google_locate()
+        jsonResponse = json.loads(latlng.content)
+        print(jsonResponse)
+        lat = jsonResponse['location']['lat']
+        lng = jsonResponse['location']['lng']
+        try:
+            userLocation = UserLocation.objects.get(user = request.user)
+            userLocation.lat, userLocation.lng = lat,lng
+            userLocation.save()
+        except:
+            userLocation = UserLocation.objects.create(user=request.user, lat = lat, lng = lng)
+
     context = {'trucks': TruckInstance.objects.all()}
     return render(request, "truck-list-view.html", context)
     # should have view of the map inside
@@ -196,3 +210,14 @@ def all_orders_view(request, *args, **kwargs):
     truck = TruckInstance.objects.get(pk=request.POST['truck'])
     context={'orders': OrderInstance.objects.filter(truck=truck),}
     return render(request, "all-orders.html", context)
+
+def logout_(request):
+    logout(request)
+    messages.info(request, "You are now logged out")
+    return redirect("index.html")
+
+# if request.method == 'POST' and 'run_script' in request.POST:
+
+    # google_locate() 
+    # return user to required page
+    # return HttpResponseRedirect(reverse(test_map_view);
