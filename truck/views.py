@@ -164,3 +164,8 @@ def all_orders_view(request, *args, **kwargs):
     truck = TruckInstance.objects.get(pk=request.POST['truck'])
     context={'orders': OrderInstance.objects.filter(truck=truck),}
     return render(request, "all-orders.html", context)
+
+def logout_(request):
+    logout(request)
+    messages.info(request, "You are now logged out")
+    return redirect("index.html")
