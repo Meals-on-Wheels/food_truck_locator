@@ -4,6 +4,7 @@ import sys
 import geocoder
 import googlemaps
 import os
+from django.shortcuts import render
 from django.http import JsonResponse
 from ..models import TruckInstance
 
@@ -44,9 +45,10 @@ def test_location(request):
     coordinates = []
     for result in geocode_result:
         coordinates.append(result[0]['geometry']['location'])
-    locs = [(coordinate['lat'], coordinate['lng']) for coordinate in coordinates]
+    locs = [[coordinate['lat'], coordinate['lng']] for coordinate in coordinates]
+    print("********************************",locs)
 
-    return JsonResponse(locs, safe=False)
+    return render(request, 'map2.html', context={'locs':locs})
 
 
 #print('Geocode:',geocode_result)
