@@ -1,6 +1,7 @@
 # Food Truck App
 #### Deployed URL:
 https://food-truck-locator-fellows.herokuapp.com/
+![QR Code](./assets/frame.png)
 
 ## Authors
 Alex Peña, Robert Radford, Seth McFeaters, Brendan W
