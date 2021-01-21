@@ -1,16 +1,18 @@
 from django.shortcuts import render, redirect, reverse
 from .models import TruckInstance, ImageLink, MenuItem, OrderInstance
 from django.http import HttpResponse, HttpRequest
+from django.utils.http import urlencode
 from django.views import View, generic
 from django import forms
-from django.contrib.auth import login, authenticate, logout
+from django.contrib.auth import login, authenticate, logout, tokens
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from django.contrib.sites.shortcuts import get_current_site
 from django.template.loader import render_to_string
 from django.utils.encoding import force_bytes, force_text
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode, urlencode
-from . import tokens
+from . import tokens_
+
 from django.conf import settings
 from django.core.mail import send_mail, EmailMessage
 from django.core.exceptions import ObjectDoesNotExist
@@ -36,13 +38,11 @@ def SignUp(request):
             user.save()
             currentSite = get_current_site(request)
             subject = 'Activate Account'
-            base_url = reverse('activate')
-            query = urlencode({'uidb64': user.pk, 'token': tokens.activate_account_token.make_token(user)})
-            url = '{}?{}'.format(base_url, query)
             message = render_to_string('activate_account_email.html', {
                 'user': user,
                 'domain': currentSite.domain,
-                'url': url,
+                'uid': force_text(urlsafe_base64_encode(force_bytes(user.pk))),#.decode(),
+                'token': tokens.activate_account_token.make_token(user),
             })
 
             cleaned_email = form.cleaned_data.get('email')
@@ -65,17 +65,13 @@ def signIn(request):
     
 
 
-# , uidb64, token
 
-def activate(request):
-    user, token = None, None
+def activate(request, uidb64, token):
     try:
-        token = request.GET.get('token')
-        uid = request.GET.get('uidb64')
+        uid = force_text(urlsafe_base64_decode(uidb64))
         user = User.objects.get(pk=uid)
     except(TypeError, ValueError, OverflowError, User.DoesNotExist): # User.ObjectDoesNotExist?
-        user = None if not user else user
-        token = None if not token else token
+        user = None
 
     if user is not None and tokens.activate_account_token.check_token(user, token):
         user.is_active = True

@@ -2,5 +2,5 @@
 Hi {{ user.username }},
 Please click link to confirm registration!
 
-https://{{ domain }}{{url}}
+https://{{ domain }}{% url 'activate' uidb64=uid token=token %}"
 {% endautoescape %}
