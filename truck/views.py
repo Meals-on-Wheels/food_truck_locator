@@ -1,16 +1,18 @@
 from django.shortcuts import render, redirect, reverse
 from .models import TruckInstance, ImageLink, MenuItem, OrderInstance
+from .tokens import activate_account_token
 from django.http import HttpResponse, HttpRequest
+from django.utils.http import urlencode
 from django.views import View, generic
 from django import forms
-from django.contrib.auth import login, authenticate, logout
+from django.contrib.auth import login, authenticate, logout, tokens
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from django.contrib.sites.shortcuts import get_current_site
 from django.template.loader import render_to_string
 from django.utils.encoding import force_bytes, force_text
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode, urlencode
-from . import tokens
+
 from django.conf import settings
 from django.core.mail import send_mail, EmailMessage
 from django.core.exceptions import ObjectDoesNotExist
@@ -32,15 +34,15 @@ def SignUp(request):
         form = SignUpForm(request.POST)
         if form.is_valid():
             user = form.save(commit=False)
-            user.is_active = False 
+            user.is_active = False
             user.save()
             currentSite = get_current_site(request)
             subject = 'Activate Account'
             message = render_to_string('activate_account_email.html', {
                 'user': user,
                 'domain': currentSite.domain,
-                'uid': force_text(urlsafe_base64_encode(force_bytes(user.pk))),#.decode(),
-                'token': tokens.activate_account_token.make_token(user),
+                'uid': urlsafe_base64_encode(force_bytes(user.pk)),#.decode(),
+                'token': activate_account_token.make_token(user),
             })
 
             cleaned_email = form.cleaned_data.get('email')
@@ -56,7 +58,7 @@ def signIn(request):
         form = AuthenticationForm(request, data=request.POST)
         if form.is_valid():
             login(request, form.get_user())
-            return redirect('index')
+            return redirect('home')
     else:
         form = AuthenticationForm()
     return render(request, 'login.html', {'form': form})
@@ -71,12 +73,11 @@ def activate(request, uidb64, token):
     except(TypeError, ValueError, OverflowError, User.DoesNotExist): # User.ObjectDoesNotExist?
         user = None
 
-    if user is not None and tokens.activate_account_token.check_token(user, token):
+    if user is not None and activate_account_token.check_token(user, token):
         user.is_active = True
         user.save()
         login(request, user)
-        #return redirect('home')
-        return('index')
+        return redirect('home')
     else:
         return render(request, "Link is invalid")
 

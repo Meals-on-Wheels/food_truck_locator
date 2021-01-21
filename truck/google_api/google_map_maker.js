@@ -9,7 +9,7 @@ function initMap() {
         var marker = new google.maps.Marker({
             position: prop.coordinates, // Passing the coordinates
             map: map, //Map that we need to add
-            draggarble: false// If set to true you can drag the marker
+            draggarble: true// If set to true you can drag the marker
         });
 
         if (prop.iconImage) { marker.setIcon(prop.iconImage); }
