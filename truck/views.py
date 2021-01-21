@@ -34,14 +34,14 @@ def SignUp(request):
         form = SignUpForm(request.POST)
         if form.is_valid():
             user = form.save(commit=False)
-            user.is_active = False 
+            user.is_active = False
             user.save()
             currentSite = get_current_site(request)
             subject = 'Activate Account'
             message = render_to_string('activate_account_email.html', {
                 'user': user,
                 'domain': currentSite.domain,
-                'uid': force_text(urlsafe_base64_encode(force_bytes(user.pk))),#.decode(),
+                'uid': urlsafe_base64_encode(force_bytes(user.pk)),#.decode(),
                 'token': activate_account_token.make_token(user),
             })
 
@@ -58,7 +58,7 @@ def signIn(request):
         form = AuthenticationForm(request, data=request.POST)
         if form.is_valid():
             login(request, form.get_user())
-            return redirect('index')
+            return redirect('home')
     else:
         form = AuthenticationForm()
     return render(request, 'login.html', {'form': form})
@@ -73,12 +73,11 @@ def activate(request, uidb64, token):
     except(TypeError, ValueError, OverflowError, User.DoesNotExist): # User.ObjectDoesNotExist?
         user = None
 
-    if user is not None and activate_account_token.check_token(user, HttpResponse(token)):
+    if user is not None and activate_account_token.check_token(user, token):
         user.is_active = True
         user.save()
         login(request, user)
-        #return redirect('home')
-        return('index')
+        return redirect('home')
     else:
         return render(request, "Link is invalid")
 
