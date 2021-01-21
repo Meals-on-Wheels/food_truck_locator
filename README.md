@@ -30,19 +30,19 @@ Basic scaffolding and dependencies.
 
 
 ### Dependencies
-python = "^3.8"
-Django = "^3.1.5"
-djangorestframework = "^3.12.2"
-psycopg2-binary = "^2.8.6"
-djangorestframework-simplejwt = "^4.6.0"
-django-environ = "^0.4.5"
-whitenoise = "^5.2.0"
-gunicorn = "^20.0.4"
-locationiq = "^0.0.2"
-geocoder = "^1.38.1"
-multidict = "^5.1.0"
-Pillow = "^8.1.0"
-googlemaps = "^4.4.2"
+- python = "^3.8"
+- Django = "^3.1.5"
+- djangorestframework = "^3.12.2"
+- psycopg2-binary = "^2.8.6"
+- djangorestframework-simplejwt = "^4.6.0"
+- django-environ = "^0.4.5"
+- whitenoise = "^5.2.0"
+- gunicorn = "^20.0.4"
+- locationiq = "^0.0.2"
+- geocoder = "^1.38.1"
+- multidict = "^5.1.0"
+- Pillow = "^8.1.0"
+- googlemaps = "^4.4.2"
 
 ### Local Install Instructions 
 *for development use purposes*
