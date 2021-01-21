@@ -4,19 +4,16 @@ from .tokens import activate_account_token
 from django.http import HttpResponse, HttpRequest
 from django.utils.http import urlencode
 from django.views import View, generic
-from django import forms
 from django.contrib.auth import login, authenticate, logout, tokens
-from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm, forms
 from django.contrib.auth.models import User
 from django.contrib.sites.shortcuts import get_current_site
 from django.template.loader import render_to_string
 from django.utils.encoding import force_bytes, force_text
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode, urlencode
-
 from django.conf import settings
 from django.core.mail import send_mail, EmailMessage
 from django.core.exceptions import ObjectDoesNotExist
-from .forms import TruckDetailForm
 import json
 
 class SignUpForm(UserCreationForm):
@@ -53,7 +50,7 @@ def SignUp(request):
         form = SignUpForm()
     return render(request, 'signup.html', {'form': form})
 
-def signIn(request):
+def login_view(request):
     if request.method == 'POST':
         form = AuthenticationForm(request, data=request.POST)
         if form.is_valid():
@@ -62,8 +59,19 @@ def signIn(request):
     else:
         form = AuthenticationForm()
     return render(request, 'login.html', {'form': form})
-    
 
+def profile_view(request, user):
+    if 'remove' in request.POST:
+        TruckInstance.objects.get(pk=request.POST['truck']).delete()
+    if 'name' in request.POST:
+        contact = '' if not 'contact' in request.POST else request.POST['contact']
+        TruckInstance.objects.create(owner=request.user, name=request.POST['name'], contact=contact)
+    account = User.objects.get(username=user)
+    return render(request, 'truck-list-view.html', {'trucks': TruckInstance.objects.filter(owner=account), 'profile': True})
+    
+def logout_view(request):
+    logout(request)
+    return redirect('home')
 
 
 def activate(request, uidb64, token):
@@ -100,9 +108,6 @@ def test_map_view(request):
 def home_view(request, *args, **kwargs):
     return render(request, "index.html", {})
 
-def login_view(request, *args, **kwargs):
-    return render(request, "login.html", {})
-
 def signup_view(request, *args, **kwargs):
     return render(request, "signup.html", {})
 
@@ -136,27 +141,54 @@ def truck_single_view(request, *args, **kwargs):
     # truck = TruckInstance.objects.get(id=request.POST['truck'])
     truck = TruckInstance.objects.get(pk=request.POST['truck'])
     context={'truck': truck,}
+    if 'edit' in request.POST:
+        context['edit'] = True
+        if 'name' in request.POST:
+            truck.name = request.POST['name']
+        if 'location' in request.POST:
+            truck.location = request.POST['location']
+        if 'link' in request.POST:
+            new_image = ImageLink.objects.create(title='' if not 'title' in request.POST else request.POST['title'], link=request.POST['link'])
+            truck.album.add(new_image)
+        if 'contact' in request.POST:
+            truck.contact = request.POST['contact']
+        truck.save()
     return render(request, "truck-single-view.html", context)
 
 ## Need to think of a way to grab all the food quantities selected and create the orderinstance
 def menu_page_view(request, *args, **kwargs):
-    if 'inventory' in request.POST:
-        new_order = OrderInstance.objects.create(poster=request.user, truck=TruckInstance.objects.get(pk=request.POST['truck']))
-        inventory = request.POST['inventory']
-        for item in inventory.split(', '):
-            new_order.inventory.add(MenuItem.objects.get(pk=int(item)))
-        new_order.save()
-        base_url = reverse('checkout')
-        query = urlencode({'order': new_order.pk})
-        url = '{}?{}'.format(base_url, query)
-        return redirect(url)
     truck = TruckInstance.objects.get(pk=request.POST['truck'])
-    context={'truck': truck}
-    return render(request, "menu-page.html", context)
+    context={'truck': truck, 'menu': truck.menu.all()}
+    if 'edit' in request.POST:
+        context['edit'] = True
+        if 'delete' in request.POST:
+            # remove = MenuItem.objects.get(pk=request.POST['item'])
+            # truck.album.remove(remove)
+            MenuItem.objects.get(pk=request.POST['item']).delete()
+        elif 'item' in request.POST:
+            editing = MenuItem.objects.get(pk=request.POST['item'])
+            editing.item = request.POST['name']
+            editing.description = request.POST['description']
+            editing.cost = request.POST['cost']
+            editing.save()
+        elif 'newitem' in request.POST:
+            new = MenuItem.objects.create(item='' if not 'name' in request.POST else request.POST['name'], description='' if not 'description' in request.POST else request.POST['description'], cost=0 if not 'cost' in request.POST else request.POST['cost'])
+            truck.menu.add(new)
+        return render(request, "menu-page.html", context)
+    else:
+        context['menu_items'] = ', '.join([str(item.id) for item in truck.menu.all()])
+        return render(request, "order-menu.html", context)
 
 def checkout_view(request, *args, **kwargs):
-    order_number = request.GET.get('order')
-    context={'orders': OrderInstance.objects.get(pk=order_number).list_inventory(),}
+    new_order = OrderInstance.objects.create(poster=request.user, truck=TruckInstance.objects.get(pk=request.POST['truck']))
+    inventory = request.POST['inventory']
+    for item in inventory.split(', '):
+        grub = MenuItem.objects.get(id=int(item))
+        if grub.item in request.POST:
+            new_order.inventory.add(grub)
+    new_order.save()
+    print('***********\n***********\n***********\n', new_order.inventory.all(), '***********\n***********\n***********\n')
+    context={'order': new_order.inventory.all(),}
     return render(request, "checkout.html", context)
 
 def all_orders_view(request, *args, **kwargs):

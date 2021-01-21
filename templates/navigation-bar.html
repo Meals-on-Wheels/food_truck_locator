@@ -35,8 +35,8 @@ display: inline;
             <div class="navBarTitle"><strong> Meals On Wheels </strong></div>
         <div>
             <ul class="navBarList">
-                {% if user.is_authenticated %} 
-                    <li><a>{{user.username}}</a> | <a>Log Out</a></li>
+                {% if user.is_authenticated %}
+                    <li><a href="{% url 'profile' user=request.user.username %}">{{user.username}}</a> | <a href="{% url 'logout' %}">Log Out</a></li>
                 {% else %}
                     <li><a href="{% url 'login' %}">Log In</a> | <a href="{% url 'signup' %}">Sign Up</a></li>
                 {% endif %}

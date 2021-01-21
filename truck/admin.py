@@ -16,4 +16,4 @@ class ImageLinkAdmin(admin.ModelAdmin):
 
 @admin.register(OrderInstance)
 class OrderInstanceAdmin(admin.ModelAdmin):
-    list_display = ('display_inventory',)
+    list_display = ('order', 'display_inventory',)

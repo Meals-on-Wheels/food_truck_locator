@@ -3,16 +3,27 @@
 {% block content %}
 
 <h3>View of all nearby food trucks coming soon</h3>
+{% if profile %}
+	<form method="post">
+		{% csrf_token %}
+		<label>Name: </label><input type="text" name="name" maxlength="75" required>
+		<label>Contact: </label><input type="text" name="contact" maxlength="18" pattern='.*?[0-9]{3}.*?[0-9]{3}.*?[0-9]{4}'>
+		<input type='submit' value='Add Truck'>
+	</form>
+{% endif %}
 <ol>
 {% for truck in trucks %}
 	<form action="{% url 'truck single view' %}" method="post">
 		{% csrf_token %}
+		{% if profile %}
+			<input type='hidden' name='edit' value='True'>
+		{% endif %}
 		<input type='hidden' name='truck' value='{{truck.pk}}'>
 		<ul>
-			<li>{{truck.name}}</li>
-			<li>{{truck.location}}</li>
+			<li>Name: {{truck.name}}</li>
+			<li>Location: {{truck.location}}</li>
 			{% if truck.contact %}
-				<li>{{truck.contact}}</li>
+				<li>Contact: {{truck.contact}}</li>
 			{% endif %}
 		</ul>
 		<input type='submit' value='Detailed'>
