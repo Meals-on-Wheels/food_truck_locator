@@ -3,26 +3,29 @@
 {% block content %}
 
 <div id="map"></div>
-        <script>
-        console.log("hello",{{locs}})
-let map;
+<script>
+  let map;
+  var lat = {{ lat }};
+  var lon = {{ lon }};
 
-{% comment %} Initialize a map object and centers it on a set of gps coordinates {% endcomment %}
-function initMap() {
-  map = new google.maps.Map(document.getElementById("map"), {
-    center: new google.maps.LatLng({{lat}}, {{lng}}),
-    zoom: 11,
-  });
-
-{% comment %} Creates all of the markers on the map {% endcomment %}
-  const locations = {{locs}}
-  locations.forEach((truck) =>{
-    const marker = new google.maps.Marker({
-      position: new google.maps.LatLng(truck[0], truck[1]),
-      icon: "http://maps.google.com/mapfiles/kml/shapes/truck.png",
-      map: map,
+  function initMap(lat, lon) {
+    map = new google.maps.Map(document.getElementById("map"), {
+      center: new google.maps.LatLng(lat, lon),
+      zoom: 11,
+      const marker = new google.maps.Marker({
+        position: new google.maps.LatLng(lat, lon),
+        icon: "http://maps.google.com/mapfiles/kml/shapes/man.png",
+        map: map,
+      });
     });
-  });
+    const locations = {{locs}}
+    locations.forEach((truck) =>{
+      const marker = new google.maps.Marker({
+        position: new google.maps.LatLng(truck[0], truck[1]),
+        icon: "http://maps.google.com/mapfiles/kml/shapes/truck.png",
+        map: map,
+      });
+    });
 }
 </script>
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBJeC1z8iqvg7uRL4CZjdWeMaZe5o1vmDE&callback=initMap" async defer></script>

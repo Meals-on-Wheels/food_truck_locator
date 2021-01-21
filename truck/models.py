@@ -51,6 +51,7 @@ class OrderInstance(models.Model):
     poster = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
     truck = models.ForeignKey(TruckInstance, on_delete=models.SET_NULL, null=True)
     inventory = models.ManyToManyField(MenuItem, blank=True)
+    prepared = models.BooleanField(default=False)
 
     def __str__(self):
         return f'{self.truck.name}'
