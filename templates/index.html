@@ -4,5 +4,9 @@
 
 <h3>index page coming soon</h3>
 <a href="{% url 'truck list' %}">trucks</a>
-
+<form action="{% url 'truck list' %}" method="post">
+    {% csrf_token %}
+    <input type="hidden" name="locator" value="True">
+    <button type="submit" name="get_location">Get Location</button>
+</form>
 {% endblock content %}
