@@ -187,7 +187,6 @@ def checkout_view(request, *args, **kwargs):
         if grub.item in request.POST:
             new_order.inventory.add(grub)
     new_order.save()
-    print('***********\n***********\n***********\n', new_order.inventory.all(), '***********\n***********\n***********\n')
     context={'order': new_order.inventory.all(),}
     return render(request, "checkout.html", context)
 
