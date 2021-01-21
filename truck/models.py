@@ -6,7 +6,7 @@ from django.dispatch import receiver
 
 # Create your models here.
 class ImageLink(models.Model):
-    title = models.CharField(max_length=75, help_text='What is the pictures name.')
+    title = models.CharField(max_length=75, help_text='What is the pictures name.', blank=True)
     link = models.URLField(max_length=250, help_text='Enter the target URL.')
 
     def __str__(self):
@@ -14,7 +14,7 @@ class ImageLink(models.Model):
 
 class MenuItem(models.Model):
     item = models.CharField(max_length=75, help_text='Enter the name of the dish.')
-    description = models.CharField(max_length=450, help_text='Enter a description of the dish.')
+    description = models.CharField(max_length=450, help_text='Enter a description of the dish.', default='No description given.')
     cost = models.DecimalField(max_digits = 8, decimal_places=2, help_text='Enter the cost of the dish')
 
     def __str__(self):
@@ -24,10 +24,10 @@ class TruckInstance(models.Model):
 
     owner = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
     name = models.CharField(max_length=75, help_text='Enter the store name.')
-    menu = models.ManyToManyField(MenuItem)
-    location = models.CharField(max_length=75, help_text='Enter the current location.')
+    menu = models.ManyToManyField(MenuItem, blank=True)
+    location = models.CharField(max_length=75, help_text='Enter the current location.', default='Closed')
     contact = models.CharField(max_length=18, help_text='Enter a working number for the truck.', blank=True)
-    album = models.ManyToManyField(ImageLink)
+    album = models.ManyToManyField(ImageLink, blank=True)
 
     class Meta:
         ordering = ['name', 'owner', 'location']
@@ -35,20 +35,17 @@ class TruckInstance(models.Model):
     def __str__(self):
         return f'{self.name}'
 
-    def list_menu(self):
-        return [f'{item.item}: {item.cost}' for item in self.menu.all()]
-
 class OrderInstance(models.Model):
 
     poster = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
     truck = models.ForeignKey(TruckInstance, on_delete=models.SET_NULL, null=True)
-    inventory = models.ManyToManyField(MenuItem)
+    inventory = models.ManyToManyField(MenuItem, blank=True)
 
     def __str__(self):
-        return f'{truck.name}'
+        return f'{self.truck.name}'
 
     def display_inventory(self):
-        return ', '.join([item.item for item in inventory])
+        return ', '.join([item.item for item in self.inventory.all()])
 
     def list_inventory(self):
         checkout = {}
@@ -60,5 +57,8 @@ class OrderInstance(models.Model):
         ret = [f'{checkout[item.item]}*{item.item}: {item.cost*checkout[item.item]}' for item in self.inventory.all()]
         ret.append(f'total: {sum([item.cost for item in self.inventory.all()])}')
         return ret
+
+    def order(self):
+        return 'order: {} | vendor: {} | customer: {}'.format(self.id, self.truck.name, self.poster.username)
 
     display_inventory.short_description = 'items'
