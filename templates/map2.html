@@ -3,55 +3,29 @@
 {% block content %}
 
 <div id="map"></div>
-        <script>
-        console.log("hello",{{locs}})
-let map;
+<script>
+  let map;
+  var lat = {{ lat }};
+  var lon = {{ lon }};
 
-{% comment %} Initializes a map object  {% endcomment %}
-function initMap() {
-  map = new google.maps.Map(document.getElementById("map"), {
-    center: new google.maps.LatLng(47.6520628, -122.354915),
-    zoom: 11,
-  });
-
-  const iconBase =
-    "https://developers.google.com/maps/documentation/javascript/examples/full/images/";
-  const icons = {
-    parking: {
-      icon: iconBase + "parking_lot_maps.png",
-    },
-    library: {
-      icon: iconBase + "library_maps.png",
-    },
-    info: {
-      icon: iconBase + "info-i_maps.png",
-    },
-  };
-
-  const locations = {{locs}}
-  locations.forEach((truck) =>{
-    const marker = new google.maps.Marker({
-      position: new google.maps.LatLng(truck[0], truck[1]),
-      icon: icons['library'].icon,
-      map: map,
+  function initMap(lat, lon) {
+    map = new google.maps.Map(document.getElementById("map"), {
+      center: new google.maps.LatLng(lat, lon),
+      zoom: 11,
+      const marker = new google.maps.Marker({
+        position: new google.maps.LatLng(lat, lon),
+        icon: "http://maps.google.com/mapfiles/kml/shapes/man.png",
+        map: map,
+      });
     });
-  });
-  {% comment %} for (let i = 0; i < locations.length; i++) {
-    const features = [
-      {
-        position: new google.maps.LatLng(-33.91721, 151.2263),
-        type: "parking",}
-    ];
-  }
-
-  // Create markers.
-  for (let i = 0; i < features.length; i++) {
-    const marker = new google.maps.Marker({
-      position: features[i].position,
-      icon: icons[features[i].type].icon,
-      map: map,
+    const locations = {{locs}}
+    locations.forEach((truck) =>{
+      const marker = new google.maps.Marker({
+        position: new google.maps.LatLng(truck[0], truck[1]),
+        icon: "http://maps.google.com/mapfiles/kml/shapes/truck.png",
+        map: map,
+      });
     });
-  } {% endcomment %}
 }
 </script>
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBJeC1z8iqvg7uRL4CZjdWeMaZe5o1vmDE&callback=initMap" async defer></script>

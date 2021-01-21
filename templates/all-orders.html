@@ -3,20 +3,41 @@
 {% block content %}
 
 <h3>All orders page comming soon</h3>
-<!-- in the view set context to OrderInstance.orders(TruckInstance.name) -->
 <ol>
 {% for order in orders %}
-	<li><ul>
-	{% for item in order.list_inventory %}
-		<li>{{item}}</li>
-	{% endfor %}
-	</ul></li>
+	<li>
+		<h2>{{order.poster.username}}</h2>
+		{% if order.poster.phone %}
+			<p>{{order.poster.phone}}</p>
+		{% endif %}
+		{% if order.prepared %}
+			<h3>Prepared</h3>
+		{% else %}
+			<h3>Waiting</h3>
+		{% endif %}
+		
+		<ul>
+			{% for item in order.inventory.all %}
+			    <li>{{item.item}}: {{item.cost}}</li>
+			{% endfor %}
+		</ul>
+	</li>
 	<form method='post'>
 		{% csrf_token %}
-		<input type="hidden" name="poster" value='{{order.poster.username}}'>
-		<input type="hidden" name="truck" value='{{order.truck}}'>
+		<input type="hidden" name="orderno" value='{{order.pk}}'>
+		<input type="hidden" name="truck" value='{{order.truck.pk}}'>
+		<input type="hidden" name="remove" value='True'>
 		<input type="submit" value='Remove'>
 	</form>
+	{% if not order.prepared %}
+		<form method='post'>
+			{% csrf_token %}
+			<input type="hidden" name="orderno" value='{{order.pk}}'>
+			<input type="hidden" name="truck" value='{{order.truck.pk}}'>
+			<input type="hidden" name="prepared" value='True'>
+			<input type="submit" value='Prepared'>
+		</form>
+	{% endif %}
 {% endfor %}
 </ol>
 {% endblock content %}

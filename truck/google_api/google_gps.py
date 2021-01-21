@@ -1,3 +1,4 @@
+import environ
 import requests
 import json
 import sys
@@ -8,12 +9,11 @@ from django.shortcuts import render
 from django.http import JsonResponse
 from ..models import TruckInstance
 
-
 GOOGLE_MAPS_API_KEY = os.environ.get('GOOGLE_API_KEY')
 
 def google_locate():
+    lat_long_url = (f'https://www.googleapis.com/geolocation/v1/geolocate?key=AIzaSyBJeC1z8iqvg7uRL4CZjdWeMaZe5o1vmDE') 
     lat_long = requests.post(lat_long_url)
-    print(lat_long.text)
     return lat_long
 
 def test_location(request):
@@ -45,12 +45,3 @@ def test_location(request):
         coordinates.append(result[0]['geometry']['location'])
     locs = [[coordinate['lat'], coordinate['lng']] for coordinate in coordinates]
     return render(request, 'map2.html', context={'locs':locs})
-
-
-#print('Geocode:',geocode_result)
-# print('Reverse Geo Code:',reverse_geocode_result)
-# print('Directions Result:',directions_result)
-
-#unfold(geocode_result)
-# print(lat)
-# print(lon)

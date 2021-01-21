@@ -1,7 +1,11 @@
 from django.contrib import admin
-from .models import TruckInstance, ImageLink, MenuItem, OrderInstance
+from .models import TruckInstance, ImageLink, MenuItem, OrderInstance, UserLocation
 
 # Register your models here.
+@admin.register(UserLocation)
+class UserLocationAdmin(admin.ModelAdmin):
+    list_display = ('user', 'lat', 'lng', 'latlng')
+
 @admin.register(TruckInstance)
 class TruckInstanceAdmin(admin.ModelAdmin):
     list_display = ('name', 'owner')

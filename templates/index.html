@@ -1,10 +1,16 @@
 {% include 'base.html' %}
 
 {% block content %}
+
 <div class="FadeAway"></div>
     <section class="w-full">
         <img class=" content opacity-30"src="https://images.pexels.com/photos/1410484/pexels-photo-1410484.jpeg?cs=srgb&dl=pexels-sunyu-kim-1410484.jpg&fm=jpg"/>
     </section>
 </div>
-
+<a href="{% url 'truck list' %}">trucks</a>
+<form action="{% url 'truck list' %}" method="post">
+    {% csrf_token %}
+    <input type="hidden" name="locator" value="True">
+    <button type="submit" name="get_location">Get Location</button>
+</form>
 {% endblock content %}

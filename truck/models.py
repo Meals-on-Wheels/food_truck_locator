@@ -5,6 +5,17 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 
 # Create your models here.
+class UserLocation(models.Model):
+    user = models.OneToOneField(User, on_delete = models.SET_NULL, null = True)
+    lat = models.DecimalField(max_digits=25, decimal_places=22)
+    lng = models.DecimalField(max_digits=25, decimal_places=22)
+    
+    def latlng(self): 
+        return f'{self.lat}, {self.lng}'
+
+    def __str__(self):
+        return f'{self.lat}, {self.lng}'
+
 class ImageLink(models.Model):
     title = models.CharField(max_length=75, help_text='What is the pictures name.', blank=True)
     link = models.URLField(max_length=250, help_text='Enter the target URL.')
@@ -40,6 +51,7 @@ class OrderInstance(models.Model):
     poster = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
     truck = models.ForeignKey(TruckInstance, on_delete=models.SET_NULL, null=True)
     inventory = models.ManyToManyField(MenuItem, blank=True)
+    prepared = models.BooleanField(default=False)
 
     def __str__(self):
         return f'{self.truck.name}'
