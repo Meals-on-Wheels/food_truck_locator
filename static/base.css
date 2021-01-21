@@ -1,14 +1,41 @@
-#map {
-    height: 400px;
-    width: 60%;
- }
-body {
-    height: 100%;
-    color: aliceblue;
-    background: rgb(67, 217, 42);
-    text-shadow: 0px 1px 3px rgba(0, 0, 0, .5);
-    font-family: "Helvetica Neue", Arial, Helvetica, sans-serif;
-    font-size: 20px;
-    box-sizing: border-box;
-    display: block;
+/* --rosso-corsa: #d30d0dff;
+--red: #ff0000ff;
+--android-green: #aacc00ff;
+--green-ryb: #55a630ff;
+--sizzling-sunrise: #ffdd00ff; */
+
+body{
+    background-color: #aacc00ff;
+    color: white;
+}
+
+header{
+    background-color: #55a630ff
+}
+
+.navBarTitle{
+    font-size: 6vw;
+    text-align: center;
+    text-shadow: 
+    1px 1px rgb(56, 105, 32),
+    2px 2px rgb(56, 105, 32),
+    3px 3px rgb(56, 105, 32),
+    4px 4px rgb(56, 105, 32),
+    5px 5px rgb(56, 105, 32),
+    6px 6px rgb(56, 105, 32),
+    7px 7px rgb(56, 105, 32),
+    7px 7px rgb(56, 105, 32),
+    7px 7px rgb(56, 105, 32);
+}
+
+.login{
+    
+    background-color:#ffdd00ff;
+    width:50%;
+}
+
+.bar{
+    margin-left: 3vw;
+    margin-right: 3vw;
+    font-size: 2vw;
 }
