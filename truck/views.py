@@ -11,7 +11,7 @@ from django.contrib.sites.shortcuts import get_current_site
 from django.template.loader import render_to_string
 from django.utils.encoding import force_bytes, force_text
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode, urlencode
-from . import tokens_
+from .tokens import activate_account_token
 
 from django.conf import settings
 from django.core.mail import send_mail, EmailMessage
@@ -42,7 +42,7 @@ def SignUp(request):
                 'user': user,
                 'domain': currentSite.domain,
                 'uid': force_text(urlsafe_base64_encode(force_bytes(user.pk))),#.decode(),
-                'token': tokens.activate_account_token.make_token(user),
+                'token': activate_account_token.make_token(user),
             })
 
             cleaned_email = form.cleaned_data.get('email')
@@ -73,7 +73,7 @@ def activate(request, uidb64, token):
     except(TypeError, ValueError, OverflowError, User.DoesNotExist): # User.ObjectDoesNotExist?
         user = None
 
-    if user is not None and tokens.activate_account_token.check_token(user, token):
+    if user is not None and activate_account_token.check_token(user, token):
         user.is_active = True
         user.save()
         login(request, user)
