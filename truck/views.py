@@ -36,10 +36,13 @@ def SignUp(request):
             user.save()
             currentSite = get_current_site(request)
             subject = 'Activate Account'
+            base_url = reverse('activate')
+            query = urlencode({'uidb64': user.pk})
+            url = '{}?{}'.format(base_url, query)
             message = render_to_string('activate_account_email.html', {
                 'user': user,
                 'domain': currentSite.domain,
-                'uid': force_text(urlsafe_base64_encode(force_bytes(user.pk))),#.decode(),
+                'url': url,
                 'token': tokens.activate_account_token.make_token(user),
             })
 
