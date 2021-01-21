@@ -1,4 +1,6 @@
 import requests
+import json
+import sys
 import geocoder
 import googlemaps
 import os
@@ -42,7 +44,6 @@ def test_location(request):
     coordinates = []
     for result in geocode_result:
         coordinates.append(result[0]['geometry']['location'])
-    print("********************************************",coordinates)
     locs = [(coordinate['lat'], coordinate['lng']) for coordinate in coordinates]
 
     return JsonResponse(locs, safe=False)
