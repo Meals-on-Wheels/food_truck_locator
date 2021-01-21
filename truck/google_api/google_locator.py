@@ -16,8 +16,6 @@ def google_locate():
     print(lat_long.text)
     return lat_long
 
-
-
 def test_location(request):
     """
     Post users address to this rout

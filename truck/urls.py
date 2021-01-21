@@ -8,6 +8,7 @@ from truck.google_api.google_locator import test_location
 
 urlpatterns = [
     path('', views.home_view, name='home'),
+    path('map/', views.test_map_view, name='test map'),
     path('test', test_location),
     path('about/', views.about_view, name='about'),
     path('login/', views.login_view, name='login'),
@@ -21,7 +22,6 @@ urlpatterns = [
     path('truck-list-view/', views.truck_list_view, name='truck list'),
     path('truck-list-view/truck-single-view/', views.truck_single_view, name="truck single view"),
     path('menu/', views.menu_page_view, name='menu'),
-    path('menu/order-details/', views.order_detail_view, name="order details"),
+    path('menu/order-details/', views.all_orders_view, name="order details"),
     path('checkout/', views.checkout_view, name="checkout"),
-    
 ]

@@ -15,10 +15,11 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from truck.views import _redirect
+from truck.views import _redirect, activate
 
 # from truck import views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('truck.urls')),
+    path('', include('django.contrib.auth.urls')),
 ]

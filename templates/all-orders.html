@@ -1,7 +1,22 @@
-{% extends 'base.html' %}
+{% include 'base.html' %}
 
 {% block content %}
 
 <h3>All orders page comming soon</h3>
-
+<!-- in the view set context to OrderInstance.orders(TruckInstance.name) -->
+<ol>
+{% for order in orders %}
+	<li><ul>
+	{% for item in order.list_inventory %}
+		<li>{{item}}</li>
+	{% endfor %}
+	</ul></li>
+	<form method='post'>
+		{% csrf_token %}
+		<input type="hidden" name="poster" value='{{order.poster.username}}'>
+		<input type="hidden" name="truck" value='{{order.truck}}'>
+		<input type="submit" value='Remove'>
+	</form>
+{% endfor %}
+</ol>
 {% endblock content %}

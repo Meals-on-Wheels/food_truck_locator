@@ -3,5 +3,13 @@
 {% block content %}
 
 <h3>Submit order page coming soon</h3>
-
+<ul>
+{% for item in order %}
+    <li>{{item}}</li>
+{% endfor %}
+</ul>
+<form action="{% url 'home' %}" method='post'>
+	{% csrf_token %}
+	<input type='submit' value='Confirm'>
+</form>
 {% endblock content %}

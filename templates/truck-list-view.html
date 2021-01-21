@@ -3,5 +3,20 @@
 {% block content %}
 
 <h3>View of all nearby food trucks coming soon</h3>
-
+<ol>
+{% for truck in trucks %}
+	<form action="{% url 'truck single view' %}" method="post">
+		{% csrf_token %}
+		<input type='hidden' name='truck' value='{{truck.pk}}'>
+		<ul>
+			<li>{{truck.name}}</li>
+			<li>{{truck.location}}</li>
+			{% if truck.contact %}
+				<li>{{truck.contact}}</li>
+			{% endif %}
+		</ul>
+		<input type='submit' value='Detailed'>
+	</form>
+{% endfor %}
+</ol>
 {% endblock content %}
