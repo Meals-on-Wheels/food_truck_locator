@@ -37,13 +37,12 @@ def SignUp(request):
             currentSite = get_current_site(request)
             subject = 'Activate Account'
             base_url = reverse('activate')
-            query = urlencode({'uidb64': user.pk})
+            query = urlencode({'uidb64': user.pk, 'token': tokens.activate_account_token.make_token(user)})
             url = '{}?{}'.format(base_url, query)
             message = render_to_string('activate_account_email.html', {
                 'user': user,
                 'domain': currentSite.domain,
                 'url': url,
-                'token': tokens.activate_account_token.make_token(user),
             })
 
             cleaned_email = form.cleaned_data.get('email')
@@ -69,11 +68,14 @@ def signIn(request):
 # , uidb64, token
 
 def activate(request):
+    user, token = None, None
     try:
+        token = request.GET.get('token')
         uid = request.GET.get('uidb64')
         user = User.objects.get(pk=uid)
     except(TypeError, ValueError, OverflowError, User.DoesNotExist): # User.ObjectDoesNotExist?
-        user = None
+        user = None if not user else user
+        token = None if not token else token
 
     if user is not None and tokens.activate_account_token.check_token(user, token):
         user.is_active = True
