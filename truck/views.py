@@ -27,8 +27,6 @@ class SignUpForm(UserCreationForm):
     lastName = forms.CharField(max_length=40, required=False)
     email = forms.EmailField(max_length=100)
     phone = forms.CharField(max_length=18)
-    password1 = forms.CharField(max_length=30)
-    password2 = forms.CharField(max_length=30)
 
     class Meta:
         model = User
