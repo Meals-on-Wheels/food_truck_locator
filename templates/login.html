@@ -3,8 +3,8 @@
 {% block content %}
 
 </head>
-<body class="flex-col justify-center items-center">
-    <div class="login content-between">
+<div class="loginpage">
+    <div class="login">
         <form method="post">
             {% csrf_token %}
             <h2 class="centeredText">Log In</h2>
@@ -19,10 +19,14 @@
                 </div>
             </div>
                 <div class="FormCollection">
-                    <button type="submit" class=""> Log In</button>
+                    <button type="submit" class="loginbtn"> Submit </button>
                 </div>
-            </form>
-            <div class="hint-text small"> No account? <a class="NoAccountText" href="{% url 'signup'%}">Create Account </a></div>
+        </form>
     </div>
-</body>
+        <div>  
+            <p class="question"> No account? </p> 
+            
+            <a class="answer" href="{% url 'signup'%}"> Create Account </a>
+        </div>
+</div>
 {% endblock %}
