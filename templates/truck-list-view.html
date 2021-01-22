@@ -4,7 +4,7 @@
 <div>
 	{% if locs or lat %}
 		<div id="map" onload="initMap()"></div>
-	{% else %}
+	{% elif request.user.is_authenticated %}
 		<form method="post">
 	        {% csrf_token %}
 	        <input type="hidden" name="locator" value="True">
