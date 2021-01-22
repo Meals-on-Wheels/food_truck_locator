@@ -4,7 +4,6 @@
 {% load static %}
 <link rel="stylesheet" href="{% static 'carousel.css' %}">
 {% if truck.album.all.count %}
-    <p>{{truck.album.all.count}}</p>
     <div class='slideshow-container'>
         {% for image in truck.album.all %}
             <div data-image="{{image.pk}}" data-link="{{image.link}}" data-title="{{image.title}}" class="mySlides fade">
