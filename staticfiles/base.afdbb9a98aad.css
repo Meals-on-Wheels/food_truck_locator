@@ -14,40 +14,13 @@ header{
 }
 
 input {
-    color: black;
-    background-color: white;
+    color: white;
+    background-color:#55a630ff;
     border-radius: 8px;
     padding-top: .25vw;
     padding-bottom: .25vw;
     padding-left: 1vw;
     padding-right: 1vw;
-}
-
-input[type=submit] {
-    color: white;
-    background-color: rgb(95, 178, 58);
-}
-
-.addItem {
-    margin-top: 1.5vw;
-}
-
-.truckform > * {
-    margin-bottom: 2vw;
-}
-
-.truckform > ul > * {
-    margin-bottom: 2vw;
-}
-
-#truckSingleForms > * {
-    margin: .5vw;
-}
-
-.checkoutBtn {
-    margin-top: 1.2vw;
-    margin-left: 50%;
-    transform: translate(-50%,50%);
 }
 
 .menuTitle {
@@ -152,6 +125,7 @@ input[type=submit] {
     margin: auto;
     margin-top: 2.5vw;
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
 }
@@ -254,7 +228,7 @@ input[type=submit] {
 
 #listlocator{
     position: relative;
-    margin: .5vw;
+    margin: 2vw;
 }
 
 .topleft:hover{

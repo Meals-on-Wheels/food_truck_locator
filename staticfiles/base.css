@@ -13,8 +13,56 @@ header{
     background-color: #55a630ff
 }
 
+input {
+    color: black;
+    background-color: white;
+    border-radius: 8px;
+    padding-top: .25vw;
+    padding-bottom: .25vw;
+    padding-left: 1vw;
+    padding-right: 1vw;
+}
+
+input[type=submit] {
+    color: white;
+    background-color: rgb(95, 178, 58);
+}
+
+.addItem {
+    margin-top: 1.5vw;
+}
+
+.truckform > * {
+    margin-bottom: 2vw;
+}
+
+.truckform > ul > * {
+    margin-bottom: 2vw;
+}
+
+#truckSingleForms > * {
+    margin: .5vw;
+}
+
+.checkoutBtn {
+    margin-top: 1.2vw;
+    margin-left: 50%;
+    transform: translate(-50%,50%);
+}
+
+.menuTitle {
+    margin:auto;
+    margin-top: 1.2vw
+    margin-bottom: 1.2vw;
+    font-weight: bolder;
+    font-size: 4vw;
+    text-align: center;
+    text-shadow: 1px 1px rgb(56, 105, 32), 2px 2px rgb(56, 105, 32), 3px 3px rgb(56, 105, 32), 4px 4px rgb(56, 105, 32), 5px 5px rgb(56, 105, 32), 6px 6px rgb(56, 105, 32), 7px 7px rgb(56, 105, 32), 7px 7px rgb(56, 105, 32), 7px 7px rgb(56, 105, 32);
+}
+
 .carouselImage {
     width: 100%;
+    margin-top: 25px;
 }
 
 #map {
@@ -100,6 +148,14 @@ header{
     text-align: center;
 }
 
+#truckSingleForms {
+    margin: auto;
+    margin-top: 2.5vw;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
 .truckform{
     margin-top: 4vw;
     background-color:#ffdd00ff;
@@ -116,6 +172,8 @@ header{
     box-shadow: 5px 7px 12px rgb(78, 78, 78);
     margin-bottom: 1.5vw;
     text-align: center;
+    margin: auto;
+    margin-top: 5vw
 }
 
 .uppage{
@@ -194,6 +252,11 @@ header{
     padding: 1vw;
 }
 
+#listlocator{
+    position: relative;
+    margin: .5vw;
+}
+
 .topleft:hover{
     background: rgba(214, 205, 205, 0.5);
 }
@@ -212,8 +275,4 @@ header{
 #map{
     width: 80vw;
     height: 40vw;
-}
-
-input{
-    color: black
 }
