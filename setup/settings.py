@@ -111,6 +111,10 @@ DATABASES = {
         'PASSWORD':  env('DATABASE_PASSWORD'),
         'HOST':  env('DATABASE_HOST'),
         'PORT':  env('DATABASE_PORT')
+    },
+     'testdefault': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': 'mytestdb',
     }
 }
 
