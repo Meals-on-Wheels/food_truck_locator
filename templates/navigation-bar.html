@@ -1,27 +1,3 @@
-<style type="text/css">
-.navBar {
-background-color:peachpuff
-}
-.navContainer {
-    color: black;
-}
-#navButton {
-    height: 30px;
-    width: 30px;
-    background: url("icon.png")
-    
-}
-.navBarTitle {
-text-align: center;
-}
-
-.navBarList {
-display: inline;
-}
-
-
-</style>
-
 <nav class="navBar">
     <div class= "navContainer">
         <div>
@@ -34,13 +10,14 @@ display: inline;
         </div>
             <div class="navBarTitle"><strong> Meals On Wheels </strong></div>
         <div>
-            <ul class="navBarList">
+            <ul class="relative flex items-center justify-between h-16 bar">
                 {% if user.is_authenticated %}
                     <li><a href="{% url 'profile' user=request.user.username %}">{{user.username}}</a> | <a href="{% url 'logout' %}">Log Out</a></li>
                 {% else %}
                     <li><a href="{% url 'login' %}">Log In</a> | <a href="{% url 'signup' %}">Sign Up</a></li>
                 {% endif %}
-                <li><a href="{% url 'home' %}">Home</a></li>
+                <li><a class="animate-bounce w-6 h-6" href="{% url 'home' %}">Home</a></li>
+                <a href="{% url 'truck list' %}">trucks</a>
                 <li><a href="{% url 'about' %}">About Us</a></li>
             </ul>
         </div>
