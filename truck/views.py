@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect, reverse
 from .models import TruckInstance, ImageLink, MenuItem, OrderInstance, UserLocation
 from .tokens import activate_account_token
-from .google_api.google_gps import google_locate, test_location, GOOGLE_MAPS_API_KEY
+from .google_api.google_gps import google_locate, test_location
 from django.http import HttpResponse, HttpRequest
 from django.utils.http import urlencode
 from django.views import View, generic
@@ -19,6 +19,10 @@ from django.core.exceptions import ObjectDoesNotExist
 import json
 import geocoder
 import googlemaps
+import os
+import environ
+
+GOOGLE_MAPS_API_KEY = os.environ.get('GOOGLE_API_KEY')
 
 class SignUpForm(UserCreationForm):
     firstName = forms.CharField(max_length=40, required=True)
