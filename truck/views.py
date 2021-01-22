@@ -27,10 +27,17 @@ class SignUpForm(UserCreationForm):
     lastName = forms.CharField(max_length=40, required=False)
     email = forms.EmailField(max_length=100)
     phone = forms.CharField(max_length=18)
+    password1 = forms.CharField(max_length=30)
+    password2 = forms.CharField(max_length=30)
 
     class Meta:
         model = User
         fields = ('username', 'firstName', 'lastName', 'email', 'phone', 'password1', 'password2')
+        help_texts = {
+            'username': None,
+            'password1': None,
+            'password2' : None,
+        }
 
 def SignUp(request):
     if request.method == 'POST':
