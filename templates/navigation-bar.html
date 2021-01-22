@@ -16,7 +16,7 @@
                 {% else %}
                     <li><a href="{% url 'login' %}">Log In</a> | <a href="{% url 'signup' %}">Sign Up</a></li>
                 {% endif %}
-                <li><a class="animate-bounce w-6 h-6" href="{% url 'home' %}">Home</a></li>
+                <li><a href="{% url 'home' %}">Home</a></li>
                 <a href="{% url 'truck list' %}">trucks</a>
                 <li><a href="{% url 'about' %}">About Us</a></li>
             </ul>

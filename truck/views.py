@@ -27,10 +27,17 @@ class SignUpForm(UserCreationForm):
     lastName = forms.CharField(max_length=40, required=False)
     email = forms.EmailField(max_length=100)
     phone = forms.CharField(max_length=18)
+    password1 = forms.CharField(max_length=30)
+    password2 = forms.CharField(max_length=30)
 
     class Meta:
         model = User
         fields = ('username', 'firstName', 'lastName', 'email', 'phone', 'password1', 'password2')
+        help_texts = {
+            'username': None,
+            'password1': None,
+            'password2' : None,
+        }
 
 def SignUp(request):
     if request.method == 'POST':
@@ -174,6 +181,8 @@ def truck_single_view(request, *args, **kwargs):
     # truck = TruckInstance.objects.get(id=request.POST['truck'])
     truck = TruckInstance.objects.get(pk=request.POST['truck'])
     context={'truck': truck,}
+    if 'image' in request.POST:
+        ImageLink.objects.get(pk=request.POST['image']).delete()
     if 'edit' in request.POST:
         context['edit'] = True
         if 'name' in request.POST:
