@@ -176,6 +176,10 @@ input[type=submit] {
     margin-top: 5vw
 }
 
+#aboutus {
+    width:70%;
+}
+
 .uppage{
     display: flex;
     flex-direction: column;
