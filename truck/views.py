@@ -181,6 +181,8 @@ def truck_single_view(request, *args, **kwargs):
     # truck = TruckInstance.objects.get(id=request.POST['truck'])
     truck = TruckInstance.objects.get(pk=request.POST['truck'])
     context={'truck': truck,}
+    if 'image' in request.POST:
+        ImageLink.objects.get(pk=request.POST['image']).delete()
     if 'edit' in request.POST:
         context['edit'] = True
         if 'name' in request.POST:
