@@ -48,7 +48,6 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'truck.apps.TruckConfig',
     'six',
-    'crispy_forms'
     #'rest_framework',
 
 
