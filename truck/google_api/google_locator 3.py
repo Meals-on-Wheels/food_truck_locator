@@ -15,7 +15,7 @@ def google_locate():
 
 google_locate()
 
-def test_location():
+def test_location(request):
     """
     Post users address to this rout
     address gets converted to lat long
