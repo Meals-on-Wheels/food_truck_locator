@@ -2,40 +2,9 @@
 
 {% block content %}
 
-<style type="text/css">
-	.LoginForm {
-		width: 300px;
-    	margin: 20px auto;
-	}
-    .LoginForm {
-    	margin-bottom: 15px;
-        background: #e4e3de;
-        box-shadow: 0px 3px 3px rgba(0, 0, 0, 0.3);
-        padding: 20px;
-    }
-    .centeredText{
-        margin: 10px;
-        color: peachpuff;
-    }
-    .FormCollection{
-        background: peachpuff;
-        border-radius: 5px;
-    }   
-    .InputParent{
-    
-    }
-    .InputChild{
-        font-weight: bold;
-        background:peachpuff;
-    }
-    .NoAccountText{
-        background: rgb(72, 220, 72);
-    }
-
-</style>
 </head>
-<body>
-    <div class="LoginForm">
+<div class="loginpage">
+    <div class="login">
         <form method="post">
             {% csrf_token %}
             <h2 class="centeredText">Log In</h2>
@@ -50,10 +19,14 @@
                 </div>
             </div>
                 <div class="FormCollection">
-                    <button type="submit" class="btn btn-success btn-block login-btn"> Log In</button>
+                    <button type="submit" class="loginbtn"> Submit </button>
                 </div>
-            </form>
-            <div class="hint-text small"> No account? <a class="NoAccountText" href="{% url 'signup'%}">Create Account </a></div>
+        </form>
     </div>
-</body>
+        <div>  
+            <p class="question"> No account? </p> 
+            
+            <a class="answer" href="{% url 'signup'%}"> Create Account </a>
+        </div>
+</div>
 {% endblock %}

@@ -1,8 +1,10 @@
 {% extends 'base.html' %}
+{% load crispy_forms_tags %}
 
 {% block content %}
 
 <h3>Submit order page coming soon</h3>
+{% form|crispy %}
 <ul>
 {% for item in order %}
     <li>{{item.item}}: {{item.cost}}</li>
