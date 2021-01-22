@@ -8,7 +8,7 @@
 		<form method="post">
 	        {% csrf_token %}
 	        <input type="hidden" name="locator" value="True">
-	    	<button class="topleft" type="submit" name="get_location">See Nearby Trucks</button>
+	    	<button id="listlocator" class="topleft" type="submit" name="get_location">See Nearby Trucks</button>
 	    </form>
 	{% endif %}
 

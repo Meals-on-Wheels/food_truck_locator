@@ -2,14 +2,16 @@
 
 {% block content %}
 
-<h3>Submit order page coming soon</h3>
-<ul>
-{% for item in order %}
-    <li>{{item.item}}: {{item.cost}}</li>
-{% endfor %}
-</ul>
+<section class="truckform">
+	<ul>
+	{% for item in order %}
+	    <li>{{item.item}}: {{item.cost}}</li>
+	{% endfor %}
+	</ul>
+</section>
+
 <form action="{% url 'home' %}" method='post'>
 	{% csrf_token %}
-	<input type='submit' value='Confirm'>
+	<input class="checkoutBtn" type='submit' value='Confirm'>
 </form>
 {% endblock content %}

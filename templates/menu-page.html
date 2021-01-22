@@ -2,34 +2,38 @@
 
 {% block content %}
 
-<h1>{{truck.name}}</h1>
-<ul>
-{% for item in menu %}
-    <li><h2>{{item.item}}</h2><p>{{item.description}}</p><h2>{{item.cost}}</h2></li>
-    {% if edit %}
-	    <form method="post">
-	        {% csrf_token %}
-	        <input type='hidden' name='edit' value='True'>
-	        <input type='hidden' name='truck' value='{{truck.pk}}'>
-	        <input type='hidden' name='item' value='{{item.pk}}'>
-	        <label>Item name: </label><input type="text" name="name" maxlength="75" value="{{item.item}}" required>
-	        <label>Item Description: </label><input type="text" name="description" maxlength="450" value="{{item.description}}" required>
-	        <label>Item Cost: </label><input type="number" step='.01' name="cost" min='0' value="{{item.cost}}" required>
-	        <input type='submit' value='Edit Item'>
-	    </form>
-		<form method="post">
-			{% csrf_token %}
-			<input type='hidden' name='edit' value='True'>
-			<input type='hidden' name='truck' value='{{truck.pk}}'>
-			<input type='hidden' name='delete' value='True'>
-			<input type='hidden' name='item' value='{{item.pk}}'>
-	    	<input type='submit' value='Remove Item'>
-		</form>
-    {% endif %}
-{% endfor %}
-</ul>
+<h1 class='menuTitle'>{{truck.name}}</h1>
+<section class="truckform">
+	<ul>
+	{% for item in menu %}
+	<section>
+	    <li><h2>{{item.item}}</h2><p>{{item.description}}</p><h2>{{item.cost}}</h2></li>
+	    {% if edit %}
+		    <form method="post">
+		        {% csrf_token %}
+		        <input type='hidden' name='edit' value='True'>
+		        <input type='hidden' name='truck' value='{{truck.pk}}'>
+		        <input type='hidden' name='item' value='{{item.pk}}'>
+		        <label>Item name: </label><input type="text" name="name" maxlength="75" value="{{item.item}}" required>
+		        <label>Item Description: </label><input type="text" name="description" maxlength="450" value="{{item.description}}" required>
+		        <label>Item Cost: </label><input type="number" step='.01' name="cost" min='0' value="{{item.cost}}" required>
+		        <input type='submit' value='Edit Item'>
+		    </form>
+			<form method="post">
+				{% csrf_token %}
+				<input type='hidden' name='edit' value='True'>
+				<input type='hidden' name='truck' value='{{truck.pk}}'>
+				<input type='hidden' name='delete' value='True'>
+				<input type='hidden' name='item' value='{{item.pk}}'>
+		    	<input type='submit' value='Remove Item'>
+			</form>
+	    {% endif %}
+	</section>
+	{% endfor %}
+	</ul>
+</section>
 {% if edit %}
-    <form method="post">
+    <form class="addItem" method="post">
         {% csrf_token %}
         <input type='hidden' name='edit' value='True'>
         <input type='hidden' name='truck' value='{{truck.pk}}'>

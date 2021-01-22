@@ -81,7 +81,8 @@
         </form>
     {% endif %}
 </section>
-    </div>
+</div>
+<section id="truckSingleForms">
     <form action="{% url 'menu' %}" method='post'>
         {% csrf_token %}
         {% if edit %}
@@ -106,6 +107,7 @@
             <input type='submit' value='View Orders'>
         </form>
     {% endif %}
+</section>
 <script>
     // https://www.w3schools.com/howto/howto_js_slideshow.asp
     var slideIndex = 1;

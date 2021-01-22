@@ -1,7 +1,7 @@
 {% include 'base.html' %}
 
 {% block content %}
-
+<section class="truckform">
 <ol>
 {% for order in orders %}
 	<li>
@@ -39,4 +39,5 @@
 	{% endif %}
 {% endfor %}
 </ol>
+</section>
 {% endblock content %}
