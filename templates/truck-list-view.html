@@ -14,22 +14,22 @@
 		<input type='submit' value='Add Truck'>
 	</form>
 {% endif %}
-<ol class="grid">
+<ol class="boxes">
 {% for truck in trucks %}
-	<form class="" action="{% url 'truck single view' %}" method="post">
+	<form class="box" action="{% url 'truck single view' %}" method="post">
 		{% csrf_token %}
 		{% if profile %}
 			<input type='hidden' name='edit' value='True'>
 		{% endif %}
 		<input type='hidden' name='truck' value='{{truck.pk}}'>
 		<ul>
-			<li>Name: {{truck.name}}</li>
+			<li class="head">Name: {{truck.name}}</li>
 			<li>Location: {{truck.location}}</li>
 			{% if truck.contact %}
 				<li>Contact: {{truck.contact}}</li>
 			{% endif %}
 		</ul>
-		<input type='submit' value='Detailed'>
+		<input class="loginbtn" type='submit' value='Detailed'>
 	</form>
 {% endfor %}
 </ol>
