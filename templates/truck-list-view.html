@@ -1,80 +1,87 @@
-{% extends 'base.html' %}
+{% include 'base.html' %}
 
 {% block content %}
-<h3>View of all nearby food trucks coming soon</h3>
-{% if locs or lat %}
-	<div id="map" onload="initMap()"></div>
-{% endif %}
-
-{% if profile %}
-	<form method="post">
-		{% csrf_token %}
-		<label>Name: </label><input type="text" name="name" maxlength="75" required>
-		<label>Contact: </label><input type="text" name="contact" maxlength="18" pattern='.*?[0-9]{3}.*?[0-9]{3}.*?[0-9]{4}'>
-		<input type='submit' value='Add Truck'>
-	</form>
-{% endif %}
-<ol class="boxes">
-{% for truck in trucks %}
-	<form class="box" action="{% url 'truck single view' %}" method="post">
-		{% csrf_token %}
-		{% if profile %}
-			<input type='hidden' name='edit' value='True'>
-		{% endif %}
-		<input type='hidden' name='truck' value='{{truck.pk}}'>
-		<ul>
-			<li class="head">Name: {{truck.name}}</li>
-			<li>Location: {{truck.location}}</li>
-			{% if truck.contact %}
-				<li>Contact: {{truck.contact}}</li>
-			{% endif %}
-		</ul>
-		<input class="loginbtn" type='submit' value='Detailed'>
-	</form>
-{% endfor %}
-</ol>
-<script>
-	let map;
-	{% if lat %}
-		var lat = {{ lat }};
-		var lng = {{ lng }};
-
-		function initMap() {
-		    map = new google.maps.Map(document.getElementById("map"), {
-		    	center: new google.maps.LatLng(lat, lng),
-		    	zoom: 11,
-		      	});
-		    const locations = {{locs}}
-		    locations.forEach((truck) =>{
-		    	const marker = new google.maps.Marker({
-		        	position: new google.maps.LatLng(truck[0], truck[1]),
-		        	icon: "http://maps.google.com/mapfiles/kml/shapes/truck.png",
-		        	map: map,
-		      	});
-		    });
-		    const marker = new google.maps.Marker({
-	        	position: new google.maps.LatLng(lat, lng),
-	        	icon: "http://maps.google.com/mapfiles/kml/shapes/man.png",
-	        	map: map,
-		    });
-		}
+<div>
+	{% if locs or lat %}
+		<div id="map" onload="initMap()"></div>
 	{% else %}
-		function initMap() {
-			const locations = {{locs}}
-		    map = new google.maps.Map(document.getElementById("map"), {
-		    	center: new google.maps.LatLng(locations[0][0], locations[0][1]),
-		    	zoom: 11,
-		      	});
-		    locations.forEach((truck) =>{
-		    	const marker = new google.maps.Marker({
-		        	position: new google.maps.LatLng(truck[0], truck[1]),
-		        	icon: "http://maps.google.com/mapfiles/kml/shapes/truck.png",
-		        	map: map,
-		      	});
-		    });
-		}
+		<form method="post">
+	        {% csrf_token %}
+	        <input type="hidden" name="locator" value="True">
+	    	<button class="topleft" type="submit" name="get_location">See Nearby Trucks</button>
+	    </form>
 	{% endif %}
 
-</script>
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBJeC1z8iqvg7uRL4CZjdWeMaZe5o1vmDE&callback=initMap" async defer></script>
-{% endblock content %}
+	{% if profile %}
+		<form method="post">
+			{% csrf_token %}
+			<label>Name: </label><input type="text" name="name" maxlength="75" required>
+			<label>Contact: </label><input type="text" name="contact" maxlength="18" pattern='.*?[0-9]{3}.*?[0-9]{3}.*?[0-9]{4}'>
+			<input type='submit' value='Add Truck'>
+		</form>
+	{% endif %}
+	<ol class="boxes">
+	{% for truck in trucks %}
+		<form class="box" action="{% url 'truck single view' %}" method="post">
+			{% csrf_token %}
+			{% if profile %}
+				<input type='hidden' name='edit' value='True'>
+			{% endif %}
+			<input type='hidden' name='truck' value='{{truck.pk}}'>
+			<ul>
+				<li class="head">Name: {{truck.name}}</li>
+				<li>Location: {{truck.location}}</li>
+				{% if truck.contact %}
+					<li>Contact: {{truck.contact}}</li>
+				{% endif %}
+			</ul>
+			<input class="loginbtn" type='submit' value='Detailed'>
+		</form>
+	{% endfor %}
+	</ol>
+	<script>
+		let map;
+		{% if lat %}
+			var lat = {{ lat }};
+			var lng = {{ lng }};
+
+			function initMap() {
+			    map = new google.maps.Map(document.getElementById("map"), {
+			    	center: new google.maps.LatLng(lat, lng),
+			    	zoom: 11,
+			      	});
+			    const locations = {{locs}}
+			    locations.forEach((truck) =>{
+			    	const marker = new google.maps.Marker({
+			        	position: new google.maps.LatLng(truck[0], truck[1]),
+			        	icon: "http://maps.google.com/mapfiles/kml/shapes/truck.png",
+			        	map: map,
+			      	});
+			    });
+			    const marker = new google.maps.Marker({
+		        	position: new google.maps.LatLng(lat, lng),
+		        	icon: "http://maps.google.com/mapfiles/kml/shapes/man.png",
+		        	map: map,
+			    });
+			}
+		{% else %}
+			function initMap() {
+				const locations = {{locs}}
+			    map = new google.maps.Map(document.getElementById("map"), {
+			    	center: new google.maps.LatLng(locations[0][0], locations[0][1]),
+			    	zoom: 11,
+			      	});
+			    locations.forEach((truck) =>{
+			    	const marker = new google.maps.Marker({
+			        	position: new google.maps.LatLng(truck[0], truck[1]),
+			        	icon: "http://maps.google.com/mapfiles/kml/shapes/truck.png",
+			        	map: map,
+			      	});
+			    });
+			}
+		{% endif %}
+
+	</script>
+	<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBJeC1z8iqvg7uRL4CZjdWeMaZe5o1vmDE&callback=initMap" async defer></script>
+	{% endblock content %}
+</div>

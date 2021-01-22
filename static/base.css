@@ -13,6 +13,16 @@ header{
     background-color: #55a630ff
 }
 
+.carouselImage {
+    width: 100%;
+}
+
+#map {
+    height: 40vw;
+    width: 80vw;
+    margin-left: 10vw;
+}
+
 .navBarTitle{
     font-size: 6vw;
     text-align: center;
