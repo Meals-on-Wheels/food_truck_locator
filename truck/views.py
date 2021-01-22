@@ -22,8 +22,6 @@ import googlemaps
 import os
 import environ
 
-GOOGLE_MAPS_API_KEY = os.environ.get('GOOGLE_API_KEY')
-
 class SignUpForm(UserCreationForm):
     firstName = forms.CharField(max_length=40, required=True)
     lastName = forms.CharField(max_length=40, required=False)
@@ -69,6 +67,7 @@ def login_view(request):
     return render(request, 'login.html', {'form': form})
 
 def profile_view(request, user):
+    GOOGLE_MAPS_API_KEY = os.environ.get('GOOGLE_API_KEY')
     account = User.objects.get(username=user)
     context = {'trucks': TruckInstance.objects.filter(owner=account), 'profile': True}
     gmaps = googlemaps.Client(key=GOOGLE_MAPS_API_KEY)
@@ -144,6 +143,7 @@ def _redirect(request, *args, **kwargs):
 
 #### Completed order for passing information
 def truck_list_view(request, *args, **kwargs):
+    GOOGLE_MAPS_API_KEY = os.environ.get('GOOGLE_API_KEY')
     context = {'trucks': TruckInstance.objects.all()}
     if 'locator' in request.POST:
         latlng = google_locate()
