@@ -1,8 +1,11 @@
 {% extends 'base.html' %}
 
 {% block content %}
-
 <h3>View of all nearby food trucks coming soon</h3>
+{% if locs or lat %}
+	<div id="map" onload="initMap()"></div>
+{% endif %}
+
 {% if profile %}
 	<form method="post">
 		{% csrf_token %}
@@ -11,9 +14,9 @@
 		<input type='submit' value='Add Truck'>
 	</form>
 {% endif %}
-<ol>
+<ol class="grid">
 {% for truck in trucks %}
-	<form action="{% url 'truck single view' %}" method="post">
+	<form class="" action="{% url 'truck single view' %}" method="post">
 		{% csrf_token %}
 		{% if profile %}
 			<input type='hidden' name='edit' value='True'>
@@ -30,4 +33,48 @@
 	</form>
 {% endfor %}
 </ol>
+<script>
+	let map;
+	{% if lat %}
+		var lat = {{ lat }};
+		var lng = {{ lng }};
+
+		function initMap() {
+		    map = new google.maps.Map(document.getElementById("map"), {
+		    	center: new google.maps.LatLng(lat, lng),
+		    	zoom: 11,
+		      	});
+		    const locations = {{locs}}
+		    locations.forEach((truck) =>{
+		    	const marker = new google.maps.Marker({
+		        	position: new google.maps.LatLng(truck[0], truck[1]),
+		        	icon: "http://maps.google.com/mapfiles/kml/shapes/truck.png",
+		        	map: map,
+		      	});
+		    });
+		    const marker = new google.maps.Marker({
+	        	position: new google.maps.LatLng(lat, lng),
+	        	icon: "http://maps.google.com/mapfiles/kml/shapes/man.png",
+	        	map: map,
+		    });
+		}
+	{% else %}
+		function initMap() {
+			const locations = {{locs}}
+		    map = new google.maps.Map(document.getElementById("map"), {
+		    	center: new google.maps.LatLng(locations[0][0], locations[0][1]),
+		    	zoom: 11,
+		      	});
+		    locations.forEach((truck) =>{
+		    	const marker = new google.maps.Marker({
+		        	position: new google.maps.LatLng(truck[0], truck[1]),
+		        	icon: "http://maps.google.com/mapfiles/kml/shapes/truck.png",
+		        	map: map,
+		      	});
+		    });
+		}
+	{% endif %}
+
+</script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBJeC1z8iqvg7uRL4CZjdWeMaZe5o1vmDE&callback=initMap" async defer></script>
 {% endblock content %}

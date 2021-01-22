@@ -83,6 +83,13 @@
         <input type='submit' value='Remove Truck'>
     </form>
 {% endif %}
+{% if edit %}
+    <form action="{% url 'order details' %}" method="post">
+        {% csrf_token %}
+        <input type='hidden' name='truck' value='{{truck.pk}}'>
+        <input type='submit' value='View Orders'>
+    </form>
+{% endif %}
 <script>
     // https://www.w3schools.com/howto/howto_js_slideshow.asp
     var slideIndex = 1;
