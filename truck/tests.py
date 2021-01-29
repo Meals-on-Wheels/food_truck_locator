@@ -39,5 +39,3 @@ class TruckInstanceTestCase(TestCase):
 
     def test_order_item(self):
         self.assertIsNotNone(self.orderInstance)
-
-    
