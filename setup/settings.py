@@ -55,8 +55,8 @@ INSTALLED_APPS = [
 
 EMAIL_USE_TLS = True
 EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_HOST_USER = 'foodtruckerfinder12@gmail.com'
-EMAIL_HOST_PASSWORD = 'foragetrucks'
+EMAIL_HOST_USER = 'mealsonwheelslocator@gmail.com'
+EMAIL_HOST_PASSWORD = env('EMAIL_PASSWORD')
 EMAIL_PORT = 587
 #EMAIL_USE_SSL = False
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
