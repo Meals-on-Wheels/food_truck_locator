@@ -10,5 +10,3 @@ class TruckInstanceTestCase(TestCase):
     
     def test_menu_item_exists(self):
         self.assertIsNotNone(self.menuItem)
-
-    

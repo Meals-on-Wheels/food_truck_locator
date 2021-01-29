@@ -105,6 +105,14 @@ WSGI_APPLICATION = 'setup.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
+        'NAME': env('HEROKU_DATABASE_NAME'),
+        'USER': env('HEROKU_DATABASE_USER'),
+        'PASSWORD':  env('HEROKU_DATABASE_PASSWORD'),
+        'HOST':  env('HEROKU_DATABASE_HOST'),
+        'PORT':  env('DATABASE_PORT')
+    },
+    'elephant': {
+        'ENGINE': 'django.db.backends.postgresql',
         'NAME': env('DATABASE_NAME'),
         'USER': env('DATABASE_USER'),
         'PASSWORD':  env('DATABASE_PASSWORD'),
