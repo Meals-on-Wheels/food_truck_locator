@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect, reverse
-from .models import TruckInstance, ImageLink, MenuItem, OrderInstance, UserLocation
+from .models import TruckInstance, ImageLink, MenuItem, OrderInstance, UserLocation, OrderItem
 from .tokens import activate_account_token
 from .google_api.google_gps import google_locate, test_location
 from django.http import HttpResponse, HttpRequest
@@ -227,7 +227,8 @@ def checkout_view(request, *args, **kwargs):
         if grub.item in request.POST:
             try:
                 if int(request.POST[grub.item]) > 0:
-                    new_order.inventory.add(grub)
+                    grub_order = OrderItem.objects.create(item=grub,quantity=request.POST[grub.item])
+                    new_order.inventory.add(grub_order)
             except:
                 pass
     new_order.save()
@@ -247,7 +248,6 @@ def all_orders_view(request, *args, **kwargs):
 
 def logout_(request):
     logout(request)
-    messages.info(request, "You are now logged out")
     return redirect("index.html")
 
 # if request.method == 'POST' and 'run_script' in request.POST:

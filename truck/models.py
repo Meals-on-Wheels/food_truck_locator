@@ -46,29 +46,37 @@ class TruckInstance(models.Model):
     def __str__(self):
         return f'{self.name}'
 
+class OrderItem(models.Model):
+
+    item = models.ForeignKey(MenuItem, on_delete=models.SET_NULL, null=True)
+    quantity = models.IntegerField()
+
+    def __str__(self):
+        return 'item: {} x {}'.format(self.item.item, self.quantity)
+
+    def item_cost(self):
+        return self.item.cost*self.quantity
+
 class OrderInstance(models.Model):
 
     poster = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
     truck = models.ForeignKey(TruckInstance, on_delete=models.SET_NULL, null=True)
-    inventory = models.ManyToManyField(MenuItem, blank=True)
+    inventory = models.ManyToManyField(OrderItem, blank=True)
     prepared = models.BooleanField(default=False)
 
     def __str__(self):
         return f'{self.truck.name}'
 
     def display_inventory(self):
-        return ', '.join([item.item for item in self.inventory.all()])
+        return ', '.join([f'{item.quantity} x {item.item.item}' for item in self.inventory.all()])
+
+    def calculate_total(self):
+        return sum([item.item_cost() for item in self.inventory.all()])
 
     def list_inventory(self):
-        checkout = {}
-        for item in self.inventory.all():
-            if item.item in checkout:
-                checkout[item.item] += 1
-            else:
-                checkout[item.item] = 1
-        ret = [f'{checkout[item.item]}*{item.item}: {item.cost*checkout[item.item]}' for item in self.inventory.all()]
-        ret.append(f'total: {sum([item.cost for item in self.inventory.all()])}')
-        return ret
+        checkout_vals = [f'{item.item.item} x {item.quantity}: {item.quantity*item.item.cost}' for item in self.inventory.all()]
+        checkout_vals.append(f'total: {self.calculate_total()}')
+        return checkout_vals
 
     def order(self):
         return 'order: {} | vendor: {} | customer: {}'.format(self.id, self.truck.name, self.poster.username)
