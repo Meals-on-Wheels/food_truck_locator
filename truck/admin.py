@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import TruckInstance, ImageLink, MenuItem, OrderInstance, UserLocation
+from .models import TruckInstance, ImageLink, MenuItem, OrderInstance, UserLocation, OrderItem
 
 # Register your models here.
 @admin.register(UserLocation)
@@ -21,3 +21,7 @@ class ImageLinkAdmin(admin.ModelAdmin):
 @admin.register(OrderInstance)
 class OrderInstanceAdmin(admin.ModelAdmin):
     list_display = ('order', 'display_inventory',)
+
+@admin.register(OrderItem)
+class OrderItemAdmin(admin.ModelAdmin):
+    list_display = ('__str__',)
