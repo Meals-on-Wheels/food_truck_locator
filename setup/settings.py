@@ -30,7 +30,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.getenv('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = env('ALLOWED_HOSTS').split(',')
 
@@ -104,6 +104,14 @@ WSGI_APPLICATION = 'setup.wsgi.application'
 
 DATABASES = {
     'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': env('HEROKU_DATABASE_NAME'),
+        'USER': env('HEROKU_DATABASE_USER'),
+        'PASSWORD':  env('HEROKU_DATABASE_PASSWORD'),
+        'HOST':  env('HEROKU_DATABASE_HOST'),
+        'PORT':  env('DATABASE_PORT')
+    },
+    'elephant': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': env('DATABASE_NAME'),
         'USER': env('DATABASE_USER'),
