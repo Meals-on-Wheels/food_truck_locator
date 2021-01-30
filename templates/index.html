@@ -3,7 +3,7 @@
 {% block content %}
 
 <section class="picframe w-full">
-        <img class=" content opacity-50"src="https://images.pexels.com/photos/1410484/pexels-photo-1410484.jpeg?cs=srgb&dl=pexels-sunyu-kim-1410484.jpg&fm=jpg"/>
+        <img class="home-picture content opacity-50"src="https://images.pexels.com/photos/1410484/pexels-photo-1410484.jpeg?cs=srgb&dl=pexels-sunyu-kim-1410484.jpg&fm=jpg"/>
         	{% if request.user.is_authenticated %}
             <form action="{% url 'truck list' %}" method="post">
                 {% csrf_token %}

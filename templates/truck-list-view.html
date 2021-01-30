@@ -13,12 +13,14 @@
 	{% endif %}
 
 	{% if profile %}
-		<form method="post">
-			{% csrf_token %}
-			<label>Name: </label><input type="text" name="name" maxlength="75" required>
-			<label>Contact: </label><input type="text" name="contact" maxlength="18" pattern='.*?[0-9]{3}.*?[0-9]{3}.*?[0-9]{4}'>
-			<input type='submit' value='Add Truck'>
-		</form>
+		<section class="truckform">
+			<form method="post">
+				{% csrf_token %}
+				<label>Name: </label><input type="text" name="name" maxlength="75" required>
+				<label>Contact: </label><input type="text" name="contact" maxlength="18" pattern='.*?[0-9]{3}.*?[0-9]{3}.*?[0-9]{4}'>
+				<input type='submit' value='Add Truck'>
+			</form>
+		</section>
 	{% endif %}
 	<ol class="boxes">
 	{% for truck in trucks %}

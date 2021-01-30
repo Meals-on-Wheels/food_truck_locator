@@ -3,7 +3,8 @@
 {% block content %}
 {% load static %}
 <link rel="stylesheet" href="{% static 'carousel.css' %}">
-{% if truck.album.all.count %}
+{% if truck.album.all.count > 1%}
+    <section class="truckform">
     <div class='slideshow-container'>
         {% for image in truck.album.all %}
             <div data-image="{{image.pk}}" data-link="{{image.link}}" data-title="{{image.title}}" class="mySlides fade">
@@ -14,7 +15,7 @@
         <a class="next" onclick="plusSlides(1)">&#10095;</a>
     </div>
     {% if edit %}
-        <form method="post">
+        <form class="editmenu" method="post">
             {% csrf_token %}
             <input type='hidden' name='edit' value='True'>
             <input type='hidden' name='truck' value='{{truck.pk}}'>
@@ -23,7 +24,7 @@
         </form>
     {% endif %}
     {% if edit %}
-        <form method="post">
+        <form class="editmenu" method="post">
             {% csrf_token %}
             <input type='hidden' name='edit' value='True'>
             <input type='hidden' name='truck' value='{{truck.pk}}'>
@@ -33,22 +34,55 @@
             <input type='submit' value='Edit Photo'>
         </form>
     {% endif %}
+    </section>
+{% elif truck.album.all.count > 0 %}
+    <section class="truckform">
+    <div class='slideshow-container'>
+        {% for image in truck.album.all %}
+            <div data-image="{{image.pk}}" data-link="{{image.link}}" data-title="{{image.title}}" class="mySlides fade">
+                <img class='carouselImage' src="{{image.link}}" alt="UML diagram">
+            </div>
+        {% endfor %}
+    </div>
+    {% if edit %}
+        <form class="editmenu" method="post">
+            {% csrf_token %}
+            <input type='hidden' name='edit' value='True'>
+            <input type='hidden' name='truck' value='{{truck.pk}}'>
+            <input type='hidden' name='image' value=''>
+            <input type='submit' value='Remove Photo'>
+        </form>
+    {% endif %}
+    {% if edit %}
+        <form class="editmenu" method="post">
+            {% csrf_token %}
+            <input type='hidden' name='edit' value='True'>
+            <input type='hidden' name='truck' value='{{truck.pk}}'>
+            <input type='hidden' name='image' value=''>
+            <label>Caption: </label><input id='editPhotoTitle' type="text" name="title" value="" maxlength="75">
+            <label>URL: </label><input id='editPhotoLink' type="text" name="link" maxlength="250" value="" required>
+            <input type='submit' value='Edit Photo'>
+        </form>
+    {% endif %}
+    </section>
 {% endif %}
 {% if edit %}
-    <form method="post">
-        {% csrf_token %}
-        <input type='hidden' name='edit' value='True'>
-        <input type='hidden' name='truck' value='{{truck.pk}}'>
-        <label>Caption: </label><input type="text" name="title" maxlength="75">
-        <label>URL: </label><input type="text" name="link" maxlength="250" required>
-        <input type='submit' value='Add Photo'>
-    </form>
+    <section class="truckform">
+        <form class="editmenu" method="post">
+            {% csrf_token %}
+            <input type='hidden' name='edit' value='True'>
+            <input type='hidden' name='truck' value='{{truck.pk}}'>
+            <label>Caption: </label><input type="text" name="title" maxlength="75">
+            <label>URL: </label><input type="text" name="link" maxlength="250" required>
+            <input type='submit' value='Add Photo'>
+        </form>
+    </section>
 {% endif %}
 
 <section class="truckform">
     <h1>{{truck.name}}</h1>
     {% if edit %}
-        <form method="post">
+        <form class="editmenu" method="post">
             {% csrf_token %}
             <input type='hidden' name='edit' value='True'>
             <input type='hidden' name='truck' value='{{truck.pk}}'>
@@ -58,7 +92,7 @@
     {% endif %}
     <h3>{{truck.locations}}</h3>
     {% if edit %}
-        <form method="post">
+        <form class="editmenu" method="post">
             {% csrf_token %}
             <input type='hidden' name='edit' value='True'>
             <input type='hidden' name='truck' value='{{truck.pk}}'>
@@ -72,7 +106,7 @@
         <p>No contact number listed</p>
     {% endif %}
     {% if edit %}
-        <form method="post">
+        <form class="editmenu" method="post">
             {% csrf_token %}
             <input type='hidden' name='edit' value='True'>
             <input type='hidden' name='truck' value='{{truck.pk}}'>
