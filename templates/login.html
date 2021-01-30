@@ -4,7 +4,7 @@
 
 </head>
 <div class="loginpage">
-    <div class="login">
+    <div class="truckform">
         <form class="editmenu" method="post">
             {% csrf_token %}
             <h2 class="centeredText">Log In</h2>
@@ -22,11 +22,10 @@
                     <button type="submit" class="loginbtn"> Submit </button>
                 </div>
         </form>
-    </div>
         <div>  
             <p> No account? </p> 
-            
-            <a class="answer" href="{% url 'signup'%}"> Create Account </a>
+            <a class="createAcct" href="{% url 'signup'%}"> Create Account </a>
         </div>
+    </div>
 </div>
 {% endblock %}
