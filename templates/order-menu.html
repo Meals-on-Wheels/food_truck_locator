@@ -3,7 +3,7 @@
 {% block content %}
 
 <h1 class='menuTitle'>{{truck.name}}</h1>
-
+{% if user.is_authenticated %}
 <form action='{% url "checkout" %}' method='post'>
 	{% csrf_token %}
 	<input type="hidden" name="inventory" value='{{menu_items}}'>
@@ -20,5 +20,16 @@
 	</section>
 	<input class='checkoutBtn' type='submit' value='Checkout'>
 </form>
+{% else %}
+	<section class="truckform">
+		<ul>
+		{% for item in menu %}
+			<section>
+				<li><h2>{{item.item}}</h2><p>{{item.description}}</p><h2>{{item.cost}}</h2></li>
+			</section>
+		{% endfor %}
+		</ul>
+	</section>
+{% endif %}
 
 {% endblock content %}
