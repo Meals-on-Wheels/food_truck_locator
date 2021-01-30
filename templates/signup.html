@@ -2,7 +2,7 @@
 {% block content %}
 <div class="uppage">
     <div class="signup">
-      <form method="post">
+      <form class="editmenu" method="post">
         {% csrf_token %}
         {{ form.as_p }}
         <button class="loginbtn" type="submit"> Register</button>
