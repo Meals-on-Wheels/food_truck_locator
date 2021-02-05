@@ -149,7 +149,7 @@ def _redirect(request, *args, **kwargs):
 
 #### Completed order for passing information
 def google_locate():
-    lat_long_url = (f'https://www.googleapis.com/geolocation/v1/geolocate?key=AIzaSyB2gYGum_ixJtw8Bu8xR4E5KSTxkuIW0Ww') 
+    lat_long_url = (f'https://www.googleapis.com/geolocation/v1/geolocate?key={os.environ.get('GOOGLE_API_KEY')}') 
     lat_long = requests.post(lat_long_url)
     return lat_long
 
