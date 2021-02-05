@@ -12,7 +12,7 @@ from ..models import TruckInstance
 GOOGLE_MAPS_API_KEY = os.environ.get('GOOGLE_API_KEY')
 
 def google_locate():
-    lat_long_url = (f'https://www.googleapis.com/geolocation/v1/geolocate?key=AIzaSyBJeC1z8iqvg7uRL4CZjdWeMaZe5o1vmDE') 
+    lat_long_url = (f'https://www.googleapis.com/geolocation/v1/geolocate?key={GOOGLE_MAPS_API_KEY}') 
     lat_long = requests.post(lat_long_url)
     return lat_long
 
@@ -30,7 +30,7 @@ def test_location(request):
     for truck in trucks:
         locations.append(truck.location)
     lat_long_url = (f'https://www.googleapis.com/geolocation/v1/geolocate?key={GOOGLE_MAPS_API_KEY}')
-    map_url = 'https://maps.googleapis.com/maps/api/staticmap?center=40.714728,-73.998672&zoom=12&size=400x400&maptype=hybrid&key=AIzaSyBJeC1z8iqvg7uRL4CZjdWeMaZe5o1vmDE'
+    map_url = 'https://maps.googleapis.com/maps/api/staticmap?center=40.714728,-73.998672&zoom=12&size=400x400&maptype=hybrid&key={GOOGLE_MAPS_API_KEY}'
     # Most accurate locator (GOOGLE)
     # Google Maps 
     gmaps = googlemaps.Client(key=GOOGLE_MAPS_API_KEY)
