@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect, reverse
 from .models import TruckInstance, ImageLink, MenuItem, OrderInstance, UserLocation, OrderItem
 from .tokens import activate_account_token
-from .google_api.google_gps import google_locate, test_location
+from .google_api.google_gps import test_location
 from django.http import HttpResponse, HttpRequest
 from django.utils.http import urlencode
 from django.views import View, generic
@@ -21,6 +21,7 @@ import geocoder
 import googlemaps
 import os
 import environ
+import requests
 
 class SignUpForm(UserCreationForm):
     firstName = forms.CharField(max_length=40, required=True)
@@ -147,6 +148,11 @@ def _redirect(request, *args, **kwargs):
     return redirect(request, 'index.html', {})
 
 #### Completed order for passing information
+def google_locate():
+    lat_long_url = (f'https://www.googleapis.com/geolocation/v1/geolocate?key=AIzaSyB2gYGum_ixJtw8Bu8xR4E5KSTxkuIW0Ww') 
+    lat_long = requests.post(lat_long_url)
+    return lat_long
+
 def truck_list_view(request, *args, **kwargs):
     GOOGLE_MAPS_API_KEY = os.environ.get('GOOGLE_API_KEY')
     context = {'trucks': TruckInstance.objects.all()}
