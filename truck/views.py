@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect, reverse
 from .models import TruckInstance, ImageLink, MenuItem, OrderInstance, UserLocation, OrderItem
 from .tokens import activate_account_token
-from .google_api.google_gps import google_locate, test_location
+from .google_api.google_gps import test_location
 from django.http import HttpResponse, HttpRequest
 from django.utils.http import urlencode
 from django.views import View, generic
@@ -131,16 +131,6 @@ def home_view(request, *args, **kwargs):
 def signup_view(request, *args, **kwargs):
     return render(request, "signup.html", {})
 
-
-# home view for after logging in?
-
-
-
-# def order_detail_view(request, *args, **kwargs):
-    # truck = TruckInstance.get(id=request.truck)
-    # context={'orders': truck.list_menu(),}
-    # return render(request, "order-detail.html", context)
-
 def about_view(request, *args, **kwargs):
     return render(request, "about.html", {})
 
@@ -151,8 +141,10 @@ def _redirect(request, *args, **kwargs):
 def truck_list_view(request, *args, **kwargs):
     GOOGLE_MAPS_API_KEY = os.environ.get('GOOGLE_API_KEY')
     context = {'trucks': TruckInstance.objects.all()}
+
     if 'locator' in request.POST:
-        latlng = google_locate()
+        lat_long_url = (f'https://www.googleapis.com/geolocation/v1/geolocate?key={GOOGLE_MAPS_API_KEY}')
+        latlng = requests.post(lat_long_url)
         jsonResponse = json.loads(latlng.content)
         lat = jsonResponse['location']['lat']
         lng = jsonResponse['location']['lng']
@@ -164,17 +156,12 @@ def truck_list_view(request, *args, **kwargs):
             userLocation = UserLocation.objects.create(user=request.user, lat = lat, lng = lng)
         context['lat'] = userLocation.lat
         context['lng'] = userLocation.lng
-        lat_long_url = (f'https://www.googleapis.com/geolocation/v1/geolocate?key={GOOGLE_MAPS_API_KEY}')
         map_url = f'https://maps.googleapis.com/maps/api/staticmap?center={userLocation.lat},{userLocation.lng}&zoom=12&size=400x400&maptype=hybrid&key={GOOGLE_MAPS_API_KEY}'
         gmaps = googlemaps.Client(key=GOOGLE_MAPS_API_KEY)
-        # Geocoding an address
-        # locations = [truck.location for truck in TruckInstance.objects.all()]
-        # geocode_result = [gmaps.geocode(location) for location in locations]
-        # coordinates = [result[0]['geometry']['location'] for result in geocode_result]
         coordinates = [gmaps.geocode(truck.location)[0]['geometry']['location'] for truck in TruckInstance.objects.filter(~Q(location='Closed'))]
         context['locs'] = [[coordinate['lat'], coordinate['lng']] for coordinate in coordinates]
+        
     return render(request, "truck-list-view.html", context)
-    # should have view of the map inside
 
 def truck_single_view(request, *args, **kwargs):
     # truck = TruckInstance.objects.get(id=request.POST['truck'])
