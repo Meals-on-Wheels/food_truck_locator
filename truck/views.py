@@ -56,8 +56,14 @@ def SignUp(request):
 
             cleaned_email = form.cleaned_data.get('email')
             email = EmailMessage(subject, message, to=[cleaned_email])
-            email.send()
-            return redirect('activate_account_sent')
+            try:
+                email.send()
+                return redirect('activate_account_sent')
+            except:
+                user.is_active = True
+                user.save()
+                login(request, user)
+                return redirect('home')
     else:
         form = SignUpForm()
     return render(request, 'signup.html', {'form': form})
@@ -160,7 +166,6 @@ def truck_list_view(request, *args, **kwargs):
         gmaps = googlemaps.Client(key=GOOGLE_MAPS_API_KEY)
         coordinates = [gmaps.geocode(truck.location)[0]['geometry']['location'] for truck in TruckInstance.objects.filter(~Q(location='Closed'))]
         context['locs'] = [[coordinate['lat'], coordinate['lng']] for coordinate in coordinates]
-        
     return render(request, "truck-list-view.html", context)
 
 def truck_single_view(request, *args, **kwargs):
